@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:club_cash/src/core/enums/app_enum.dart';
+import 'package:club_cash/src/core/routes/routes.dart';
 import 'package:club_cash/src/core/services/local_storage.dart';
 import 'package:club_cash/src/core/theme/app_theme.dart';
 import 'package:club_cash/src/core/utils/asset_path.dart';
@@ -28,11 +29,11 @@ class _SplashScreenState extends State<SplashPage>
   void pageNavigation() async {
     var token = LocalStorage.getData(key: LocalStorageKey.token);
 
-    // if(token != null){
-    //   Get.offAllNamed(RouteGenerator.dashboard);
-    // } else{
-    //   Get.offAllNamed(RouteGenerator.dashboard);
-    // }
+    if(token != null){
+      Get.offAllNamed(RouteGenerator.home);
+    } else{
+      Get.offAllNamed(RouteGenerator.home);
+    }
   }
 
   @override

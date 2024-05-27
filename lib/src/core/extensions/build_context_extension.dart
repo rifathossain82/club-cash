@@ -31,14 +31,14 @@ extension BuildContextExtension on BuildContext {
 
   TextStyle? get buttonTextStyle =>
       Theme.of(this).textTheme.titleSmall?.copyWith(
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w700,
         color: kWhite,
         fontSize: 14,
       );
 
   TextStyle? get outlinedButtonTextStyle =>
       Theme.of(this).textTheme.titleSmall?.copyWith(
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w700,
         color: kPrimaryColor,
         fontSize: 14,
       );

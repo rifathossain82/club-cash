@@ -1,10 +1,9 @@
+import 'package:club_cash/src/features/home/view/pages/homepage.dart';
 import 'package:club_cash/src/features/splash/view/pages/splash_page.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RouteGenerator {
   static const String splash = '/';
-  static const String dashboard = '/dashboard';
   static const String home = '/home';
   // static const String popularSites = '/popular-sites';
   // static const String locationList = '/location-list-page';
@@ -23,18 +22,10 @@ class RouteGenerator {
       name: RouteGenerator.splash,
       page: () => const SplashPage(),
     ),
-    // GetPage(
-    //   name: RouteGenerator.dashboard,
-    //   page: () => const DashboardPage(),
-    // ),
-    // GetPage(
-    //   name: RouteGenerator.home,
-    //   page: () => Scaffold(
-    //     appBar: AppBar(
-    //       title: const Text('Homepage'),
-    //     ),
-    //   ),
-    // ),
+    GetPage(
+      name: RouteGenerator.home,
+      page: () => const Homepage(),
+    ),
     // GetPage(
     //   name: RouteGenerator.popularSites,
     //   page: () => const PopularSitesPage(),
