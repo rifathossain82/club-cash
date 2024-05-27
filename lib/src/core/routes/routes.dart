@@ -1,3 +1,4 @@
+import 'package:club_cash/src/features/splash/view/pages/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,10 +19,10 @@ class RouteGenerator {
   // static const String noInternet = '/no-internet';
 
   static final routes = [
-    // GetPage(
-    //   name: RouteGenerator.splash,
-    //   page: () => const SplashPage(),
-    // ),
+    GetPage(
+      name: RouteGenerator.splash,
+      page: () => const SplashPage(),
+    ),
     // GetPage(
     //   name: RouteGenerator.dashboard,
     //   page: () => const DashboardPage(),
