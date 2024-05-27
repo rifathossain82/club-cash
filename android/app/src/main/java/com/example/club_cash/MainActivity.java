@@ -1,4 +1,4 @@
-package com.example.club_cash;
+package com.clubcash.app;
 
 import io.flutter.embedding.android.FlutterActivity;
 
