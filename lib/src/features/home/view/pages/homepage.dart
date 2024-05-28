@@ -1,10 +1,13 @@
+import 'package:club_cash/src/core/routes/routes.dart';
 import 'package:club_cash/src/core/utils/app_constants.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_box_shadow.dart';
 import 'package:club_cash/src/core/widgets/k_icon_button.dart';
+import 'package:club_cash/src/features/home/view/pages/transaction_add_update_page.dart';
 import 'package:club_cash/src/features/home/view/widgets/homepage_body.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -41,9 +44,23 @@ class Homepage extends StatelessWidget {
 
   void _onPressedSettings() {}
 
-  void _onCashIn() {}
+  void _onCashIn() {
+    Get.toNamed(
+      RouteGenerator.transactionAddUpdate,
+      arguments: TransactionAddUpdatePageArguments(
+        title: "Add Cash In Transaction",
+      ),
+    );
+  }
 
-  void _onCashOut() {}
+  void _onCashOut() {
+    Get.toNamed(
+      RouteGenerator.transactionAddUpdate,
+      arguments: TransactionAddUpdatePageArguments(
+        title: "Add Cash Out Transaction",
+      ),
+    );
+  }
 }
 
 class _AppBarIconButton extends StatelessWidget {

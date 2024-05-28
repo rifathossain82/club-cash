@@ -1,11 +1,13 @@
 import 'package:club_cash/src/features/home/view/pages/homepage.dart';
+import 'package:club_cash/src/features/home/view/pages/transaction_add_update_page.dart';
 import 'package:club_cash/src/features/splash/view/pages/splash_page.dart';
 import 'package:get/get.dart';
 
 class RouteGenerator {
   static const String splash = '/';
   static const String home = '/home';
-  // static const String popularSites = '/popular-sites';
+  static const String transactionAddUpdate = '/transaction-add-update';
+
   // static const String locationList = '/location-list-page';
   // static const String networkInfo = '/network-info';
   // static const String speedTester = '/speed-tester';
@@ -26,10 +28,12 @@ class RouteGenerator {
       name: RouteGenerator.home,
       page: () => const Homepage(),
     ),
-    // GetPage(
-    //   name: RouteGenerator.popularSites,
-    //   page: () => const PopularSitesPage(),
-    // ),
+    GetPage(
+      name: RouteGenerator.transactionAddUpdate,
+      page: () => TransactionAddUpdatePage(
+        arguments: Get.arguments as TransactionAddUpdatePageArguments,
+      ),
+    ),
     // GetPage(
     //   name: RouteGenerator.locationList,
     //   page: () => const VPNServerPage(),

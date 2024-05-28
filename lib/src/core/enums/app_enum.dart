@@ -8,3 +8,8 @@ enum Status {
   success,
   failure,
 }
+
+enum PaymentMethod{
+  cash,
+  online,
+}
