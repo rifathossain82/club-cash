@@ -1,6 +1,5 @@
 import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/utils/color.dart';
-import 'package:club_cash/src/core/widgets/k_box_shadow.dart';
 import 'package:club_cash/src/core/widgets/k_divider.dart';
 import 'package:flutter/material.dart';
 
@@ -18,9 +17,6 @@ class NetBalanceCardWidget extends StatelessWidget {
           color: kGreyLight,
           width: 0.5,
         ),
-        boxShadow: [
-          KBoxShadow.item(),
-        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -99,6 +95,36 @@ class NetBalanceCardWidget extends StatelessWidget {
                   ],
                 ),
               ],
+            ),
+          ),
+          const KDivider(height: 0),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 10
+            ),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {},
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'view reports'.toUpperCase(),
+                    style: context.appTextTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: kPrimaryColor,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.arrow_forward_ios_outlined,
+                    color: kPrimaryColor,
+                    size: 14,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

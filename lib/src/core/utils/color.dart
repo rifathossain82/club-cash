@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Color kPrimaryColor = const Color(0xFF1e3784);
-Color kScaffoldBackgroundColor = Colors.white;
+Color kScaffoldBackgroundColor = const Color(0xFFf4f4f5);
 
 Color successColor = Colors.green;
 Color failedColor = Colors.red;

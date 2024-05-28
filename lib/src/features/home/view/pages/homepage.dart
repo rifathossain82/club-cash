@@ -12,9 +12,7 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(AppConstants.appName),
-      ),
+      appBar: _homepageAppBar(),
       body: const HomepageBody(),
       bottomNavigationBar: _BottomNavigationBar(
         onCashIn: _onCashIn,
@@ -23,10 +21,50 @@ class Homepage extends StatelessWidget {
     );
   }
 
+  AppBar _homepageAppBar() {
+    return AppBar(
+      title: const Text(AppConstants.appName),
+      actions: [
+        _AppBarIconButton(
+          onPressed: _onPressedMember,
+          iconData: Icons.person_add_alt,
+        ),
+        _AppBarIconButton(
+          onPressed: _onPressedSettings,
+          iconData: Icons.settings_outlined,
+        ),
+      ],
+    );
+  }
 
-  void _onCashIn(){}
+  void _onPressedMember() {}
 
-  void _onCashOut(){}
+  void _onPressedSettings() {}
+
+  void _onCashIn() {}
+
+  void _onCashOut() {}
+}
+
+class _AppBarIconButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final IconData iconData;
+
+  const _AppBarIconButton({
+    required this.onPressed,
+    required this.iconData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: Icon(
+        iconData,
+        size: 20,
+      ),
+    );
+  }
 }
 
 class _BottomNavigationBar extends StatelessWidget {
