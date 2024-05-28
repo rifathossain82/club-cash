@@ -2,8 +2,13 @@ import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:flutter/material.dart';
 
-class TransactionListTitleText extends StatelessWidget {
-  const TransactionListTitleText({super.key});
+class TitleTextWidget extends StatelessWidget {
+  final String title;
+
+  const TitleTextWidget({
+    super.key,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,7 @@ class TransactionListTitleText extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          "Transaction List : ",
+          title,
           textAlign: TextAlign.start,
           style: context.appTextTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.bold,

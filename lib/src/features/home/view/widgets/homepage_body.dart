@@ -1,5 +1,5 @@
 import 'package:club_cash/src/features/home/view/widgets/net_balance_card_widget.dart';
-import 'package:club_cash/src/features/home/view/widgets/transaction_list_title_text.dart';
+import 'package:club_cash/src/core/widgets/title_text_widget.dart';
 import 'package:club_cash/src/features/home/view/widgets/transaction_list_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +11,7 @@ class HomepageBody extends StatelessWidget {
     return Column(
       children: [
         NetBalanceCardWidget(),
-        const TransactionListTitleText(),
+        const TitleTextWidget(title: "Transaction List : "),
         Expanded(
           child: TransactionListWidget(),
         ),

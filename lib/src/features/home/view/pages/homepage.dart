@@ -15,6 +15,7 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kHomepageBackgroundColor,
       appBar: _homepageAppBar(),
       body: const HomepageBody(),
       bottomNavigationBar: _BottomNavigationBar(
@@ -40,7 +41,12 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  void _onPressedMember() {}
+  void _onPressedMember() {
+    Get.toNamed(
+      RouteGenerator.memberListPage,
+      arguments: false,
+    );
+  }
 
   void _onPressedSettings() {}
 
@@ -48,7 +54,7 @@ class Homepage extends StatelessWidget {
     Get.toNamed(
       RouteGenerator.transactionAddUpdate,
       arguments: TransactionAddUpdatePageArguments(
-        title: "Add Cash In Transaction",
+        isCashIn: true,
       ),
     );
   }
@@ -57,7 +63,7 @@ class Homepage extends StatelessWidget {
     Get.toNamed(
       RouteGenerator.transactionAddUpdate,
       arguments: TransactionAddUpdatePageArguments(
-        title: "Add Cash Out Transaction",
+        isCashIn: false,
       ),
     );
   }

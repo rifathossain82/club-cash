@@ -1,6 +1,7 @@
 import 'package:club_cash/src/core/enums/app_enum.dart';
 import 'package:club_cash/src/core/extensions/string_extension.dart';
 import 'package:club_cash/src/core/helpers/validators.dart';
+import 'package:club_cash/src/core/routes/routes.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_blank_field_builder_with_title.dart';
 import 'package:club_cash/src/core/widgets/k_box_shadow.dart';
@@ -9,14 +10,15 @@ import 'package:club_cash/src/core/widgets/k_icon_button.dart';
 import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class TransactionAddUpdatePageArguments {
-  final String title;
+  final bool isCashIn;
   final String? existingTransaction;
 
   TransactionAddUpdatePageArguments({
-    required this.title,
+    required this.isCashIn,
     this.existingTransaction,
   });
 }
@@ -30,10 +32,11 @@ class TransactionAddUpdatePage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TransactionAddUpdatePage> createState() => _AddEntryPageState();
+  State<TransactionAddUpdatePage> createState() =>
+      _TransactionAddUpdatePageState();
 }
 
-class _AddEntryPageState extends State<TransactionAddUpdatePage> {
+class _TransactionAddUpdatePageState extends State<TransactionAddUpdatePage> {
   final formKey = GlobalKey<FormState>();
   final amountTextController = TextEditingController();
   final remarkTextController = TextEditingController();
@@ -82,16 +85,22 @@ class _AddEntryPageState extends State<TransactionAddUpdatePage> {
 
   @override
   Widget build(BuildContext context) {
+    String action =
+        widget.arguments.existingTransaction != null ? "Update" : "Add";
+    String transactionType = widget.arguments.isCashIn
+        ? "Cash In Transaction"
+        : "Cash Out Transaction";
+
+    String title = "$action $transactionType";
+
     return Scaffold(
-      backgroundColor: kWhite,
       appBar: AppBar(
-        title: Text(
-          widget.arguments.title,
-        ),
+        title: Text(title),
       ),
       body: _transactionFormWidget(),
       bottomNavigationBar: _BottomNavigationBar(
         onSave: _onSave,
+        isCashIn: widget.arguments.isCashIn,
       ),
     );
   }
@@ -135,7 +144,12 @@ class _AddEntryPageState extends State<TransactionAddUpdatePage> {
               KBlankFieldBuilderWithTitle(
                 title: "Member",
                 content: Text("Rahim"),
-                onTap: () {},
+                onTap: () async {
+                  Get.toNamed(
+                    RouteGenerator.memberListPage,
+                    arguments: true,
+                  );
+                },
               ),
               KTextFormFieldBuilderWithTitle(
                 controller: amountTextController,
@@ -179,9 +193,11 @@ class _AddEntryPageState extends State<TransactionAddUpdatePage> {
 
 class _BottomNavigationBar extends StatelessWidget {
   final VoidCallback onSave;
+  final bool isCashIn;
 
   const _BottomNavigationBar({
     required this.onSave,
+    required this.isCashIn,
   });
 
   @override
@@ -198,7 +214,7 @@ class _BottomNavigationBar extends StatelessWidget {
         onPressed: onSave,
         iconData: Icons.check,
         title: "save".toUpperCase(),
-        bgColor: kGreen,
+        bgColor: isCashIn ? kGreen : kRed,
       ),
     );
   }

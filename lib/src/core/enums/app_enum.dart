@@ -13,3 +13,8 @@ enum PaymentMethod{
   cash,
   online,
 }
+
+enum PopupMenuItemOptions {
+  edit,
+  delete,
+}

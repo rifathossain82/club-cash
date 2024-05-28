@@ -6,6 +6,8 @@ class AssetPath{
   static const String placeholder = 'assets/images/placeholder.png';
 
   /// icons
-  // static const String checkoutIcon = 'assets/icons/checkout.svg';
+  static const String deleteIcon = 'assets/icons/delete.svg';
+  static const String editIcon = 'assets/icons/edit.svg';
+  static const String noDataFound = 'assets/icons/no_data_found.svg';
 
 }
