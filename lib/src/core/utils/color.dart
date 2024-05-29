@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-Color kPrimaryColor = const Color(0xFF1e3784);
+Color kPrimaryColor = const Color(0xFF3e60db);
 Color kScaffoldBackgroundColor = Colors.white;
+Color kSecondaryBackgroundColor = const Color(0xFFf4f4f5);
 
 Color successColor = Colors.green;
 Color failedColor = Colors.red;
@@ -36,22 +37,30 @@ Color kDividerColor = const Color(0xFFE8ECF2);
 Color kBlueGrey = const Color(0xFF7D8FAB);
 Color? kDarkBlueGrey = Colors.blueGrey[900];
 Color kSplashScreenBgColor = const Color(0xFF1e3784);
-Color kHighlightColor = const Color.fromRGBO(30, 55, 132, .2);
+Color kHighlightColor = const Color.fromRGBO(62,96,219, .2);
 
 Color kShimmerBaseColor = Colors.grey.shade300;
 Color kShimmerHighlightColor = Colors.grey.shade100;
 
+final List<Color> randomColors = [
+  Colors.deepOrange,
+  Colors.blue,
+  Colors.green,
+  Colors.teal,
+  Colors.purple,
+];
+
 Map<int, Color> materialColor = const {
-  50: Color.fromRGBO(30, 55, 132, .1),
-  100: Color.fromRGBO(30, 55, 132, .2),
-  200: Color.fromRGBO(30, 55, 132, .3),
-  300: Color.fromRGBO(30, 55, 132, .4),
-  400: Color.fromRGBO(30, 55, 132, .5),
-  500: Color.fromRGBO(30, 55, 132, .6),
-  600: Color.fromRGBO(30, 55, 132, .7),
-  700: Color.fromRGBO(30, 55, 132, .8),
-  800: Color.fromRGBO(30, 55, 132, .9),
-  900: Color.fromRGBO(30, 55, 132, 1),
+  50: Color.fromRGBO(62,96,219, .1),
+  100: Color.fromRGBO(62,96,219, .2),
+  200: Color.fromRGBO(62,96,219, .3),
+  300: Color.fromRGBO(62,96,219, .4),
+  400: Color.fromRGBO(62,96,219, .5),
+  500: Color.fromRGBO(62,96,219, .6),
+  600: Color.fromRGBO(62,96,219, .7),
+  700: Color.fromRGBO(62,96,219, .8),
+  800: Color.fromRGBO(62,96,219, .9),
+  900: Color.fromRGBO(62,96,219, 1),
 };
 
 MaterialColor kPrimarySwatchColor = MaterialColor(

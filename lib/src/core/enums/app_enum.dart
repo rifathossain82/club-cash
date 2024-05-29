@@ -8,3 +8,13 @@ enum Status {
   success,
   failure,
 }
+
+enum PaymentMethod{
+  cash,
+  online,
+}
+
+enum PopupMenuItemOptions {
+  edit,
+  delete,
+}
