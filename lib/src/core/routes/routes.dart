@@ -1,3 +1,5 @@
+import 'package:club_cash/src/features/auth/view/pages/login_page.dart';
+import 'package:club_cash/src/features/auth/view/pages/register_page.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_update_page.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_out_transaction_add_update_page.dart';
 import 'package:club_cash/src/features/home/view/pages/homepage.dart';
@@ -9,6 +11,8 @@ import 'package:get/get.dart';
 
 class RouteGenerator {
   static const String splash = '/';
+  static const String login = '/login';
+  static const String register = '/register';
   static const String home = '/home';
   static const String cashInTransactionAddUpdate = '/cash-in-transaction-add-update';
   static const String cashOutTransactionAddUpdate = '/cash-out-transaction-add-update';
@@ -20,6 +24,14 @@ class RouteGenerator {
     GetPage(
       name: RouteGenerator.splash,
       page: () => const SplashPage(),
+    ),
+    GetPage(
+      name: RouteGenerator.login,
+      page: () => const LoginPage(),
+    ),
+    GetPage(
+      name: RouteGenerator.register,
+      page: () => const RegisterPage(),
     ),
     GetPage(
       name: RouteGenerator.home,
