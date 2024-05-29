@@ -1,5 +1,6 @@
+import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_update_page.dart';
+import 'package:club_cash/src/features/home/view/pages/cash_out_transaction_add_update_page.dart';
 import 'package:club_cash/src/features/home/view/pages/homepage.dart';
-import 'package:club_cash/src/features/home/view/pages/transaction_add_update_page.dart';
 import 'package:club_cash/src/features/member/view/pages/member_list_page.dart';
 import 'package:club_cash/src/features/splash/view/pages/splash_page.dart';
 import 'package:get/get.dart';
@@ -7,7 +8,8 @@ import 'package:get/get.dart';
 class RouteGenerator {
   static const String splash = '/';
   static const String home = '/home';
-  static const String transactionAddUpdate = '/transaction-add-update';
+  static const String cashInTransactionAddUpdate = '/cash-in-transaction-add-update';
+  static const String cashOutTransactionAddUpdate = '/cash-out-transaction-add-update';
   static const String memberListPage = '/member-list-page';
 
   // static const String locationList = '/location-list-page';
@@ -31,9 +33,15 @@ class RouteGenerator {
       page: () => const Homepage(),
     ),
     GetPage(
-      name: RouteGenerator.transactionAddUpdate,
-      page: () => TransactionAddUpdatePage(
-        arguments: Get.arguments as TransactionAddUpdatePageArguments,
+      name: RouteGenerator.cashInTransactionAddUpdate,
+      page: () => CashInTransactionAddUpdatePage(
+        arguments: Get.arguments as CashInTransactionAddUpdatePageArguments,
+      ),
+    ),
+    GetPage(
+      name: RouteGenerator.cashOutTransactionAddUpdate,
+      page: () => CashOutTransactionAddUpdatePage(
+        arguments: Get.arguments as CashOutTransactionAddUpdatePageArguments,
       ),
     ),
     GetPage(

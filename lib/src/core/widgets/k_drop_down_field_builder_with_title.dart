@@ -103,6 +103,7 @@ class KDropDownFieldBuilderWithTitle<T> extends StatelessWidget {
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),
+          isDense: true,
                 hint: Text(
                   hintText,
                   style: context.appTextTheme.bodySmall,

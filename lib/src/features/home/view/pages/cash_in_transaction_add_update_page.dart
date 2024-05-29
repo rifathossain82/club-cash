@@ -13,30 +13,29 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class TransactionAddUpdatePageArguments {
-  final bool isCashIn;
+class CashInTransactionAddUpdatePageArguments {
   final String? existingTransaction;
 
-  TransactionAddUpdatePageArguments({
-    required this.isCashIn,
+  CashInTransactionAddUpdatePageArguments({
     this.existingTransaction,
   });
 }
 
-class TransactionAddUpdatePage extends StatefulWidget {
-  final TransactionAddUpdatePageArguments arguments;
+class CashInTransactionAddUpdatePage extends StatefulWidget {
+  final CashInTransactionAddUpdatePageArguments arguments;
 
-  const TransactionAddUpdatePage({
+  const CashInTransactionAddUpdatePage({
     Key? key,
     required this.arguments,
   }) : super(key: key);
 
   @override
-  State<TransactionAddUpdatePage> createState() =>
+  State<CashInTransactionAddUpdatePage> createState() =>
       _TransactionAddUpdatePageState();
 }
 
-class _TransactionAddUpdatePageState extends State<TransactionAddUpdatePage> {
+class _TransactionAddUpdatePageState
+    extends State<CashInTransactionAddUpdatePage> {
   final formKey = GlobalKey<FormState>();
   final amountTextController = TextEditingController();
   final remarkTextController = TextEditingController();
@@ -85,13 +84,9 @@ class _TransactionAddUpdatePageState extends State<TransactionAddUpdatePage> {
 
   @override
   Widget build(BuildContext context) {
-    String action =
-        widget.arguments.existingTransaction != null ? "Update" : "Add";
-    String transactionType = widget.arguments.isCashIn
-        ? "Cash In Transaction"
-        : "Cash Out Transaction";
-
-    String title = "$action $transactionType";
+    String title = widget.arguments.existingTransaction != null
+        ? "Update Cash In Transaction"
+        : "Add Cash In Transaction";
 
     return Scaffold(
       appBar: AppBar(
@@ -100,7 +95,6 @@ class _TransactionAddUpdatePageState extends State<TransactionAddUpdatePage> {
       body: _transactionFormWidget(),
       bottomNavigationBar: _BottomNavigationBar(
         onSave: _onSave,
-        isCashIn: widget.arguments.isCashIn,
       ),
     );
   }
@@ -193,11 +187,9 @@ class _TransactionAddUpdatePageState extends State<TransactionAddUpdatePage> {
 
 class _BottomNavigationBar extends StatelessWidget {
   final VoidCallback onSave;
-  final bool isCashIn;
 
   const _BottomNavigationBar({
     required this.onSave,
-    required this.isCashIn,
   });
 
   @override
@@ -214,7 +206,7 @@ class _BottomNavigationBar extends StatelessWidget {
         onPressed: onSave,
         iconData: Icons.check,
         title: "save".toUpperCase(),
-        bgColor: isCashIn ? kGreen : kRed,
+        bgColor: kGreen,
       ),
     );
   }

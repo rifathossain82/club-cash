@@ -23,6 +23,7 @@ dependencies:
   logger: ^2.0.2+1
   lottie: ^2.3.2
   flutter_app_version_checker: ^0.3.2
+  dropdown_search: ^3.0.1
   get_storage: ^2.0.3
   get: ^4.6.5
 

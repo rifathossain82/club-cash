@@ -8,6 +8,6 @@ class AssetPath{
   /// icons
   static const String deleteIcon = 'assets/icons/delete.svg';
   static const String editIcon = 'assets/icons/edit.svg';
-  static const String noDataFound = 'assets/icons/no_data_found.svg';
+  static const String noDataFoundIcon = 'assets/icons/no_data_found.svg';
 
 }

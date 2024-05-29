@@ -7,7 +7,7 @@ import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_divider.dart';
 import 'package:club_cash/src/core/widgets/status_builder.dart';
 import 'package:club_cash/src/core/widgets/svg_icon_button.dart';
-import 'package:club_cash/src/features/home/view/pages/transaction_add_update_page.dart';
+import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_update_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -110,9 +110,10 @@ class TransactionItemWidget extends StatelessWidget {
 
   void onEditTransaction() {
     Get.toNamed(
-      RouteGenerator.transactionAddUpdate,
-      arguments: TransactionAddUpdatePageArguments(
-          isCashIn: true, existingTransaction: "hi"),
+      RouteGenerator.cashInTransactionAddUpdate,
+      arguments: CashInTransactionAddUpdatePageArguments(
+        existingTransaction: "hi",
+      ),
     );
   }
 
@@ -120,7 +121,8 @@ class TransactionItemWidget extends StatelessWidget {
     bool? result = await DialogService.confirmationDialog(
       context: context,
       title: "Delete Transaction?",
-      subtitle: "Are you sure you want to delete this transaction? This action cannot be undone.",
+      subtitle:
+          "Are you sure you want to delete this transaction? This action cannot be undone.",
       negativeActionText: 'cancel'.toUpperCase(),
       positiveActionText: 'delete'.toUpperCase(),
     );
