@@ -9,6 +9,7 @@ class KTextFormFieldBuilderWithTitle extends StatelessWidget {
   final String? hintText;
   final FocusNode? focusNode;
   final IconData? prefixIconData;
+  final Widget? suffixIcon;
   final int? maxLine;
   final int? minLine;
   final Function(String value)? onChanged;
@@ -16,6 +17,7 @@ class KTextFormFieldBuilderWithTitle extends StatelessWidget {
   final TextInputType? inputType;
   final TextInputAction? inputAction;
   final bool readOnly;
+  final double bottomPadding;
 
   const KTextFormFieldBuilderWithTitle({
     Key? key,
@@ -25,6 +27,7 @@ class KTextFormFieldBuilderWithTitle extends StatelessWidget {
     this.hintText,
     this.focusNode,
     this.prefixIconData,
+    this.suffixIcon,
     this.maxLine,
     this.minLine,
     this.onChanged,
@@ -32,6 +35,7 @@ class KTextFormFieldBuilderWithTitle extends StatelessWidget {
     this.inputAction = TextInputAction.next,
     this.inputType = TextInputType.text,
     this.readOnly = false,
+    this.bottomPadding = 15,
   }) : super(key: key);
 
   @override
@@ -87,9 +91,10 @@ class KTextFormFieldBuilderWithTitle extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
             ),
             prefixIcon: prefixIconData != null ? Icon(prefixIconData) : null,
+            suffixIcon: suffixIcon,
           ),
         ),
-        const SizedBox(height: 15),
+        SizedBox(height: bottomPadding),
       ],
     );
   }

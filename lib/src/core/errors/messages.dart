@@ -11,6 +11,7 @@ class Message {
   static const String emptyOldPassword = "Please enter your old password!";
   static const String emptyNewPassword = "Please enter your new password!";
   static const String emptyConfirmPassword = "Please enter your confirm password!";
+  static const String doNotMatchPasswords = "Password don't match!";
   static const String emptyOTP = "Please enter OTP!";
   static const String invalidOTP = "OTP must be 6 characters!";
   static const String invalidCustomerGroupAmount = "The amount must be at least 1!";
