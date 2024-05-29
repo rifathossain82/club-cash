@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Color kPrimaryColor = const Color(0xFF3e60db);
 Color kScaffoldBackgroundColor = Colors.white;
-Color kHomepageBackgroundColor = const Color(0xFFf4f4f5);
+Color kSecondaryBackgroundColor = const Color(0xFFf4f4f5);
 
 Color successColor = Colors.green;
 Color failedColor = Colors.red;

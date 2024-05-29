@@ -2,6 +2,8 @@ import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_u
 import 'package:club_cash/src/features/home/view/pages/cash_out_transaction_add_update_page.dart';
 import 'package:club_cash/src/features/home/view/pages/homepage.dart';
 import 'package:club_cash/src/features/member/view/pages/member_list_page.dart';
+import 'package:club_cash/src/features/message_history/view/pages/message_history_page.dart';
+import 'package:club_cash/src/features/message_template/view/pages/message_template_page.dart';
 import 'package:club_cash/src/features/splash/view/pages/splash_page.dart';
 import 'package:get/get.dart';
 
@@ -11,17 +13,8 @@ class RouteGenerator {
   static const String cashInTransactionAddUpdate = '/cash-in-transaction-add-update';
   static const String cashOutTransactionAddUpdate = '/cash-out-transaction-add-update';
   static const String memberListPage = '/member-list-page';
-
-  // static const String locationList = '/location-list-page';
-  // static const String networkInfo = '/network-info';
-  // static const String speedTester = '/speed-tester';
-  // static const String aboutUs = '/about-us';
-  // static const String share = '/share';
-  // static const String contactUs = '/contact-us';
-  // static const String privacyPolicy = '/privacy-policy';
-  // static const String termsAndConditions = '/terms-and-conditions';
-  // static const String prayerTimes = '/prayer-times';
-  // static const String noInternet = '/no-internet';
+  static const String messageTemplate = '/message-template';
+  static const String messageHistory = '/message-history';
 
   static final routes = [
     GetPage(
@@ -50,41 +43,13 @@ class RouteGenerator {
         isSelectable: Get.arguments as bool,
       ),
     ),
-    // GetPage(
-    //   name: RouteGenerator.networkInfo,
-    //   page: () => const NetworkInfoPage(),
-    // ),
-    // GetPage(
-    //   name: RouteGenerator.speedTester,
-    //   page: () => const SpeedTesterPage(),
-    // ),
-    // GetPage(
-    //   name: RouteGenerator.aboutUs,
-    //   page: () => const AboutPage(),
-    // ),
-    // GetPage(
-    //   name: RouteGenerator.share,
-    //   page: () => const SharePage(),
-    // ),
-    // GetPage(
-    //   name: RouteGenerator.contactUs,
-    //   page: () => const ContactUsPage(),
-    // ),
-    // GetPage(
-    //   name: RouteGenerator.privacyPolicy,
-    //   page: () => const PrivacyPolicyPage(),
-    // ),
-    // GetPage(
-    //   name: RouteGenerator.termsAndConditions,
-    //   page: () => const TermsAndConditionsPage(),
-    // ),
-    // GetPage(
-    //   name: RouteGenerator.prayerTimes,
-    //   page: () => const PrayerTimesPage(),
-    // ),
-    // GetPage(
-    //   name: RouteGenerator.noInternet,
-    //   page: () => const NoInternetPage(),
-    // ),
+    GetPage(
+      name: RouteGenerator.messageTemplate,
+      page: () => const MessageTemplatePage(),
+    ),
+    GetPage(
+      name: RouteGenerator.messageHistory,
+      page: () => const MessageHistoryPage(),
+    ),
   ];
 }
