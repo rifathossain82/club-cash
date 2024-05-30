@@ -3,15 +3,17 @@ import 'dart:math';
 import 'package:club_cash/src/core/enums/app_enum.dart';
 import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/extensions/string_extension.dart';
-import 'package:club_cash/src/core/helpers/logger.dart';
 import 'package:club_cash/src/core/services/dialog_service.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/popup_menu_item_builder.dart';
+import 'package:club_cash/src/features/member/controller/member_controller.dart';
+import 'package:club_cash/src/features/member/model/member_model.dart';
 import 'package:club_cash/src/features/member/view/widgets/member_add_update_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MemberItemWidget extends StatelessWidget {
-  final String data;
+  final MemberModel data;
   final bool isSelectable;
   final bool isEditable;
 
@@ -29,8 +31,6 @@ class MemberItemWidget extends StatelessWidget {
       onTap: () {
         if (isSelectable) {
           Navigator.pop(context, data);
-        } else {
-          Log.debug("HI");
         }
       },
       child: ListTile(
@@ -48,7 +48,7 @@ class MemberItemWidget extends StatelessWidget {
             color: randomColors[index],
           ),
           child: Text(
-            'Jobayer Islam'.substring(0, 1).toUpperCase(),
+            (data.name ?? '').substring(0, 1).toUpperCase(),
             style: context.appTextTheme.titleMedium?.copyWith(
               color: kWhite,
               fontWeight: FontWeight.bold,
@@ -56,14 +56,14 @@ class MemberItemWidget extends StatelessWidget {
           ),
         ),
         title: Text(
-          'Jobayer Islam',
+          data.name ?? '',
           style: context.appTextTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w500,
             color: kBlackLight,
           ),
         ),
         subtitle: Text(
-          '${01882508771}',
+          data.phone ?? '',
           style: context.appTextTheme.bodySmall?.copyWith(
             color: kGreyTextColor,
           ),
@@ -104,9 +104,9 @@ class MemberItemWidget extends StatelessWidget {
   }
 
   void _onUpdateMember(BuildContext context) async {
-    var result = await memberAddUpdateBottomSheet(
+    await memberAddUpdateBottomSheet(
       context: context,
-      existingMember: "nothing"
+      existingMember: data,
     );
   }
 
@@ -120,10 +120,7 @@ class MemberItemWidget extends StatelessWidget {
     );
 
     if (result ?? false) {
-      // final contactController = Get.find<ContactController>();
-      // contactController.deleteContact(
-      //   id: '${data.id}',
-      // );
+      Get.find<MemberController>().deleteMember(data.id ?? '');
     }
   }
 }

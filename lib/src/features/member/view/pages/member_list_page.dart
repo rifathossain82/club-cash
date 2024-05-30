@@ -1,9 +1,11 @@
 import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_search_field.dart';
+import 'package:club_cash/src/features/member/controller/member_controller.dart';
 import 'package:club_cash/src/features/member/view/widgets/member_add_update_bottom_sheet.dart';
 import 'package:club_cash/src/features/member/view/widgets/member_list_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MemberListPage extends StatefulWidget {
   final bool isSelectable;
@@ -19,6 +21,13 @@ class MemberListPage extends StatefulWidget {
 
 class _MemberPickerPageState extends State<MemberListPage> {
   final searchTextController = TextEditingController();
+  final memberController = Get.find<MemberController>();
+
+  @override
+  void initState() {
+    super.initState();
+    memberController.getMemberList();
+  }
 
   @override
   void dispose() {
@@ -52,7 +61,7 @@ class _MemberPickerPageState extends State<MemberListPage> {
   }
 
   void _onManuallyAddMember() async {
-    var result = await memberAddUpdateBottomSheet(
+    await memberAddUpdateBottomSheet(
       context: context,
     );
   }
