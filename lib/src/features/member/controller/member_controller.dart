@@ -1,16 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:club_cash/src/core/helpers/logger.dart';
+import 'package:club_cash/src/core/services/permission_manager.dart';
 import 'package:club_cash/src/core/services/snack_bar_services.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/features/member/model/member_model.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:get/get.dart';
 
 class MemberController extends GetxController {
   var isLoadingMemberList = false.obs;
+  var isLoadingContactList = false.obs;
   var isAddingMember = false.obs;
   var isUpdatingMember = false.obs;
   var isDeletingMember = false.obs;
   var memberList = <MemberModel>[].obs;
+  var contactList = <MemberModel>[].obs;
 
   final _memberCollection = FirebaseFirestore.instance.collection('members');
 
@@ -42,11 +46,38 @@ class MemberController extends GetxController {
     }
   }
 
-  Future<bool> isDuplicateMember(String phone) async {
+  Future<void> getContactList() async {
     try {
-      final querySnapshot = await _memberCollection
-          .where('phone', isEqualTo: phone)
-          .get();
+      isLoadingContactList(true);
+      contactList.value = [];
+
+      if (await PermissionManager.requestContactPermission()) {
+        /// Get all contacts without thumbnail (faster)
+        List<Contact> contacts = await ContactsService.getContacts(
+          withThumbnails: false,
+        );
+
+        contactList.value = contacts.map((contact) => MemberModel(
+          name: contact.displayName ?? '',
+          phone: contact.phones?.isNotEmpty ?? false ? contact.phones!.first.value : '',
+        )).toList();
+      }
+    } catch (e, stackTrace) {
+      Log.error('$e', stackTrace: stackTrace);
+
+      SnackBarService.showSnackBar(
+        message: e.toString(),
+        bgColor: failedColor,
+      );
+    } finally {
+      isLoadingContactList(false);
+    }
+  }
+
+  Future<bool> isDuplicateMember(dynamic phone) async {
+    try {
+      final querySnapshot =
+          await _memberCollection.where('phone', isEqualTo: phone).get();
 
       return querySnapshot.docs.isNotEmpty;
     } catch (e) {
@@ -59,7 +90,7 @@ class MemberController extends GetxController {
     try {
       isAddingMember(true);
 
-      if (await isDuplicateMember(member.phone ?? '')) {
+      if (await isDuplicateMember(member.phone)) {
         SnackBarService.showSnackBar(
           message: "Phone number already exists!",
           bgColor: failedColor,
@@ -90,7 +121,7 @@ class MemberController extends GetxController {
     try {
       isUpdatingMember(true);
 
-      if (await isDuplicateMember(member.phone ?? '')) {
+      if (await isDuplicateMember(member.phone)) {
         SnackBarService.showSnackBar(
           message: "Phone number already exists!",
           bgColor: failedColor,

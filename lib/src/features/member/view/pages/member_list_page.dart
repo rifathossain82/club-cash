@@ -1,3 +1,4 @@
+import 'package:club_cash/src/core/enums/app_enum.dart';
 import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_search_field.dart';
@@ -26,7 +27,9 @@ class _MemberPickerPageState extends State<MemberListPage> {
   @override
   void initState() {
     super.initState();
-    memberController.getMemberList();
+    memberController
+      ..getMemberList()
+      ..getContactList();
   }
 
   @override
@@ -63,6 +66,7 @@ class _MemberPickerPageState extends State<MemberListPage> {
   void _onManuallyAddMember() async {
     await memberAddUpdateBottomSheet(
       context: context,
+      formStatus: FormStatus.add,
     );
   }
 }

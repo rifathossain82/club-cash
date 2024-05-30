@@ -125,8 +125,8 @@ class _LoginFormState extends State<_LoginForm> {
                     );
             }),
           ),
-          const OrText(),
-          const CreateAccountButton(),
+          // const OrText(),
+          // const CreateAccountButton(),
         ],
       ),
     );

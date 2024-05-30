@@ -18,3 +18,8 @@ enum PopupMenuItemOptions {
   edit,
   delete,
 }
+
+enum FormStatus{
+  add,
+  update,
+}

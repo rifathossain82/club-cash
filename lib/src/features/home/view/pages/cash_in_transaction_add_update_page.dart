@@ -8,6 +8,7 @@ import 'package:club_cash/src/core/widgets/k_box_shadow.dart';
 import 'package:club_cash/src/core/widgets/k_drop_down_field_builder_with_title.dart';
 import 'package:club_cash/src/core/widgets/k_icon_button.dart';
 import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.dart';
+import 'package:club_cash/src/features/member/model/member_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,7 +42,7 @@ class _TransactionAddUpdatePageState
   final remarkTextController = TextEditingController();
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
-  String? selectedMember;
+  MemberModel? selectedMember;
   String? selectedPaymentMethod;
 
   Future<void> _selectDate(BuildContext context) async {
@@ -137,12 +138,20 @@ class _TransactionAddUpdatePageState
               ),
               KBlankFieldBuilderWithTitle(
                 title: "Member",
-                content: Text("Rahim"),
+                content: Text(
+                  '${selectedMember != null ? selectedMember?.name : 'Select'}',
+                ),
                 onTap: () async {
-                  Get.toNamed(
+                  var result = await Get.toNamed(
                     RouteGenerator.memberListPage,
                     arguments: true,
                   );
+
+                  if(result is MemberModel){
+                    setState(() {
+                      selectedMember = result;
+                    });
+                  }
                 },
               ),
               KTextFormFieldBuilderWithTitle(

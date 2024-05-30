@@ -1,3 +1,4 @@
+import 'package:club_cash/src/core/enums/app_enum.dart';
 import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/helpers/validators.dart';
 import 'package:club_cash/src/core/utils/color.dart';
@@ -10,6 +11,7 @@ import 'package:get/get.dart';
 
 Future<void> memberAddUpdateBottomSheet({
   required BuildContext context,
+  required FormStatus formStatus,
   MemberModel? existingMember,
 }) {
   return showModalBottomSheet(
@@ -22,6 +24,7 @@ Future<void> memberAddUpdateBottomSheet({
     ),
     builder: (context) {
       return MemberAddUpdateForm(
+        formStatus: formStatus,
         existingMember: existingMember,
       );
     },
@@ -29,9 +32,14 @@ Future<void> memberAddUpdateBottomSheet({
 }
 
 class MemberAddUpdateForm extends StatefulWidget {
+  final FormStatus formStatus;
   final MemberModel? existingMember;
 
-  const MemberAddUpdateForm({Key? key, this.existingMember}) : super(key: key);
+  const MemberAddUpdateForm({
+    Key? key,
+    required this.formStatus,
+    this.existingMember,
+  }) : super(key: key);
 
   @override
   State<MemberAddUpdateForm> createState() => _MemberAddUpdateFormState();
@@ -87,7 +95,7 @@ class _MemberAddUpdateFormState extends State<MemberAddUpdateForm> {
                   ),
                 ),
                 Text(
-                  widget.existingMember != null
+                  widget.formStatus == FormStatus.update
                       ? "Update Member"
                       : "Add Member",
                   style: context.appTextTheme.titleSmall?.copyWith(
@@ -129,15 +137,15 @@ class _MemberAddUpdateFormState extends State<MemberAddUpdateForm> {
                       return KIconButton(
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
-                            if (widget.existingMember != null) {
+                            if (widget.formStatus == FormStatus.update) {
                               _memberController
                                   .updateMember(
-                                member: MemberModel(
-                                  id: widget.existingMember?.id,
-                                  name: _nameTextController.text.trim(),
-                                  phone: _phoneTextController.text.trim(),
-                                ),
-                              )
+                                    member: MemberModel(
+                                      id: widget.existingMember?.id,
+                                      name: _nameTextController.text.trim(),
+                                      phone: _phoneTextController.text.trim(),
+                                    ),
+                                  )
                                   .then((value) => Navigator.pop(context));
                             } else {
                               _memberController

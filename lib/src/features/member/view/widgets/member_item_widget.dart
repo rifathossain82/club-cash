@@ -28,9 +28,15 @@ class MemberItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     int index = Random().nextInt(randomColors.length);
     return GestureDetector(
-      onTap: () {
-        if (isSelectable) {
+      onTap: () async {
+        if (isSelectable && isEditable) {
           Navigator.pop(context, data);
+        } if (isEditable == false) {
+          await memberAddUpdateBottomSheet(
+            formStatus: FormStatus.add,
+            context: context,
+            existingMember: data,
+          );
         }
       },
       child: ListTile(
@@ -106,6 +112,7 @@ class MemberItemWidget extends StatelessWidget {
   void _onUpdateMember(BuildContext context) async {
     await memberAddUpdateBottomSheet(
       context: context,
+      formStatus: FormStatus.update,
       existingMember: data,
     );
   }
@@ -114,7 +121,8 @@ class MemberItemWidget extends StatelessWidget {
     bool? result = await DialogService.confirmationDialog(
       context: context,
       title: "Delete Member?",
-      subtitle: "Are you sure you want to delete this member? This action cannot be undone.",
+      subtitle:
+          "Are you sure you want to delete this member? This action cannot be undone.",
       negativeActionText: 'cancel'.toUpperCase(),
       positiveActionText: 'delete'.toUpperCase(),
     );
