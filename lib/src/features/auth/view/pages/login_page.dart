@@ -3,12 +3,15 @@ import 'package:club_cash/src/core/helpers/validators.dart';
 import 'package:club_cash/src/core/theme/app_theme.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_button.dart';
+import 'package:club_cash/src/core/widgets/k_button_progress_indicator.dart';
 import 'package:club_cash/src/core/widgets/k_logo.dart';
 import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.dart';
+import 'package:club_cash/src/features/auth/controller/auth_controller.dart';
 import 'package:club_cash/src/features/auth/view/widgets/create_account_button.dart';
 import 'package:club_cash/src/features/auth/view/widgets/forgot_password_button.dart';
 import 'package:club_cash/src/features/auth/view/widgets/or_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -44,6 +47,7 @@ class _LoginFormState extends State<_LoginForm> {
   late final TextEditingController _passwordTextController;
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   bool _isPasswordVisible = true;
+  final authController = Get.find<AuthController>();
 
   @override
   void initState() {
@@ -112,10 +116,14 @@ class _LoginFormState extends State<_LoginForm> {
           KButton(
             onPressed: _onLogin,
             borderRadius: 4,
-            child: Text(
-              'Login'.toUpperCase(),
-              style: context.buttonTextStyle,
-            ),
+            child: Obx(() {
+              return authController.isLoginLoading.value
+                  ? const KButtonProgressIndicator()
+                  : Text(
+                      'Login'.toUpperCase(),
+                      style: context.buttonTextStyle,
+                    );
+            }),
           ),
           const OrText(),
           const CreateAccountButton(),
@@ -126,7 +134,10 @@ class _LoginFormState extends State<_LoginForm> {
 
   void _onLogin() {
     if (_loginFormKey.currentState!.validate()) {
-      // TODO: Implement login logic.
+      authController.login(
+        username: _usernameTextController.text.trim(),
+        password: _passwordTextController.text.trim(),
+      );
     }
   }
 }

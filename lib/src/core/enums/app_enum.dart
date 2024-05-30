@@ -1,5 +1,5 @@
 enum LocalStorageKey {
-  token,
+  userId,
 }
 
 enum Status {

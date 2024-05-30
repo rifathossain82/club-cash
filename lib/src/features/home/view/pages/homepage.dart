@@ -1,15 +1,21 @@
+import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/routes/routes.dart';
 import 'package:club_cash/src/core/utils/app_constants.dart';
+import 'package:club_cash/src/core/utils/asset_path.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_box_shadow.dart';
+import 'package:club_cash/src/core/widgets/k_button.dart';
+import 'package:club_cash/src/core/widgets/k_button_progress_indicator.dart';
 import 'package:club_cash/src/core/widgets/k_icon_button.dart';
 import 'package:club_cash/src/core/widgets/popup_menu_item_builder.dart';
+import 'package:club_cash/src/features/auth/controller/auth_controller.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_update_page.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_out_transaction_add_update_page.dart';
 import 'package:club_cash/src/features/home/view/widgets/homepage_body.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -18,7 +24,7 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kSecondaryBackgroundColor,
-      appBar: _homepageAppBar(),
+      appBar: _homepageAppBar(context),
       body: const HomepageBody(),
       bottomNavigationBar: _BottomNavigationBar(
         onCashIn: _onCashIn,
@@ -27,7 +33,7 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  AppBar _homepageAppBar() {
+  AppBar _homepageAppBar(BuildContext context) {
     return AppBar(
       title: const Text(AppConstants.appName),
       actions: [
@@ -38,8 +44,10 @@ class Homepage extends StatelessWidget {
               _onPressedMember();
             } else if (value == 1) {
               _onPressedMessageTemplate();
-            } else {
+            } else if (value == 2) {
               _onPressedMessageHistory();
+            } else {
+              _onPressedLogout(context);
             }
           },
           icon: Icon(
@@ -65,6 +73,12 @@ class Homepage extends StatelessWidget {
               iconColor: kGrey,
               title: "Message History",
             ),
+            popupMenuItemBuilder(
+              value: 3,
+              icon: Icons.logout,
+              iconColor: kGrey,
+              title: "Logout",
+            ),
           ],
         )
       ],
@@ -88,6 +102,93 @@ class Homepage extends StatelessWidget {
     Get.toNamed(
       RouteGenerator.messageHistory,
     );
+  }
+
+  void _onPressedLogout(BuildContext context) async {
+    final authController = Get.find<AuthController>();
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            backgroundColor: Colors.white,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 150,
+                  width: context.screenWidth * 0.8,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(15),
+                    ),
+                    color: kPrimaryColor,
+                  ),
+                  child: Lottie.asset(
+                    AssetPath.logoutLottie,
+                    height: 120,
+                    width: 120,
+                  ),
+                ),
+                Container(
+                  height: 150,
+                  width: context.screenWidth * 0.8,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(15),
+                    ),
+                    color: kWhite,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'You are about to logout.\nAre you sure this is what you want?',
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.titleMedium,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text(
+                              'Cancel',
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: kPrimaryColor,
+                              ),
+                            ),
+                          ),
+                          KButton(
+                            width: context.screenWidth * 0.4,
+                            bgColor: kPrimaryColor,
+                            onPressed: () {
+                              authController.logout();
+                            },
+                            child: Obx(() {
+                              return authController.isLoginLoading.value
+                                  ? const KButtonProgressIndicator()
+                                  : Text(
+                                      'Confirm Logout'.toUpperCase(),
+                                      style: context.buttonTextStyle,
+                                    );
+                            }),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   void _onCashIn() {
