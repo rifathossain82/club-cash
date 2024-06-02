@@ -1,5 +1,4 @@
-import 'package:club_cash/src/core/widgets/failure_widget_builder.dart';
-import 'package:club_cash/src/core/widgets/k_custom_loader.dart';
+import 'package:club_cash/src/core/helpers/debouncer.dart';
 import 'package:club_cash/src/core/widgets/k_search_field.dart';
 import 'package:club_cash/src/features/contact/controller/contact_controller.dart';
 import 'package:club_cash/src/features/contact/view/widgets/contact_list_widget.dart';
@@ -29,25 +28,28 @@ class _MemberPickerPageState extends State<SelectableContactListPage> {
       appBar: AppBar(
         title: const Text('Select Contact'),
       ),
-      body: Obx(() {
-        return contactController.isLoadingContactList.value
-            ? const KCustomLoader()
-            : contactController.contactList.isEmpty
-                ? const FailureWidgetBuilder()
-                : Column(
-                    children: [
-                      KSearchField(
-                        controller: searchTextController,
-                        hintText: 'Search',
-                      ),
-                      Expanded(
-                        child: ContactListWidget(
-                          contactController: contactController,
-                        ),
-                      ),
-                    ],
-                  );
-      }),
+      body: Column(
+        children: [
+          KSearchField(
+            controller: searchTextController,
+            hintText: 'Search',
+            inputType: TextInputType.text,
+            inputAction: TextInputAction.search,
+            onChanged: onChangedSearchBox,
+          ),
+          Expanded(
+            child: ContactListWidget(
+              contactController: contactController,
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  void onChangedSearchBox(dynamic value) {
+    Debouncer.run(() {
+      contactController.getContactList(text: value);
+    });
   }
 }

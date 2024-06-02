@@ -15,7 +15,7 @@ class ContactController extends GetxController {
     getContactList();
   }
 
-  Future<void> getContactList() async {
+  Future<void> getContactList({String? text}) async {
     try {
       isLoadingContactList(true);
       contactList.value = [];
@@ -24,6 +24,7 @@ class ContactController extends GetxController {
         /// Get all contacts without thumbnail (faster)
         contactList.value = await ContactsService.getContacts(
           withThumbnails: false,
+          query: text,
         );
       }
     } catch (e, stackTrace) {
