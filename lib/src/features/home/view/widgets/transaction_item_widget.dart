@@ -1,3 +1,4 @@
+import 'package:club_cash/src/core/enums/app_enum.dart';
 import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/extensions/date_time_extension.dart';
 import 'package:club_cash/src/core/routes/routes.dart';
@@ -7,12 +8,19 @@ import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_divider.dart';
 import 'package:club_cash/src/core/widgets/status_builder.dart';
 import 'package:club_cash/src/core/widgets/svg_icon_button.dart';
+import 'package:club_cash/src/features/home/controller/home_controller.dart';
+import 'package:club_cash/src/features/home/model/transaction_model.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_update_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TransactionItemWidget extends StatelessWidget {
-  const TransactionItemWidget({Key? key}) : super(key: key);
+  final TransactionModel transaction;
+
+  const TransactionItemWidget({
+    Key? key,
+    required this.transaction,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +47,14 @@ class TransactionItemWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Jamal Uddin",
+                        transaction.member?.name ?? "",
                         style: context.appTextTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
                       StatusBuilder(
-                        status: 'Cash',
+                        status: transaction.paymentMethod ?? "",
                         statusColor: kBlue,
                       ),
                     ],
@@ -57,18 +65,21 @@ class TransactionItemWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "500",
+                        "${transaction.amount ?? 0}",
                         style: context.appTextTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: kGreen,
+                          color: transaction.type == TransactionType.cashIn.name
+                              ? kGreen
+                              : kRed,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${'Balance'}: 500',
+                        "${transaction.datetime?.formattedDateTime}",
+                        textAlign: TextAlign.start,
                         style: context.appTextTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w500,
                           color: kGreyTextColor,
+                          fontSize: 11,
                         ),
                       ),
                     ],
@@ -82,9 +93,9 @@ class TransactionItemWidget extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    DateTime.now().formattedDateTime,
-                    textAlign: TextAlign.start,
+                    'Remarks: ${transaction.remarks ?? ''}',
                     style: context.appTextTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
                       color: kGreyTextColor,
                       fontSize: 11,
                     ),
@@ -112,7 +123,7 @@ class TransactionItemWidget extends StatelessWidget {
     Get.toNamed(
       RouteGenerator.cashInTransactionAddUpdate,
       arguments: CashInTransactionAddUpdatePageArguments(
-        existingTransaction: "hi",
+        existingTransaction: transaction,
       ),
     );
   }
@@ -128,10 +139,10 @@ class TransactionItemWidget extends StatelessWidget {
     );
 
     if (result ?? false) {
-      // final contactController = Get.find<ContactController>();
-      // contactController.deleteContact(
-      //   id: '${data.id}',
-      // );
+      final transactionController = Get.find<TransactionController>();
+      transactionController.deleteTransaction(
+        transaction.id ?? '',
+      );
     }
   }
 }

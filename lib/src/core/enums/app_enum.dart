@@ -11,7 +11,12 @@ enum Status {
 
 enum PaymentMethod{
   cash,
-  online,
+  bkash,
+}
+
+enum TransactionType{
+  cashIn,
+  cashOut,
 }
 
 enum PopupMenuItemOptions {
