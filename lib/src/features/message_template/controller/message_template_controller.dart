@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:club_cash/src/core/enums/app_enum.dart';
 import 'package:club_cash/src/core/helpers/logger.dart';
+import 'package:club_cash/src/core/services/local_storage.dart';
 import 'package:club_cash/src/core/services/snack_bar_services.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/features/message_template/model/message_template_model.dart';
@@ -11,13 +13,30 @@ class MessageTemplateController extends GetxController {
   var isUpdatingTemplate = false.obs;
   var isDeletingTemplate = false.obs;
   var templateList = <MessageTemplateModel>[].obs;
+  var selectedTemplateId = Rxn<String>();
 
   final _collection = FirebaseFirestore.instance.collection('templates');
 
   @override
   void onInit() {
     super.onInit();
+    getSelectedTemplateId();
     getTemplateList();
+  }
+
+  void getSelectedTemplateId() {
+    selectedTemplateId.value = LocalStorage.getData(
+      key: LocalStorageKey.messageTemplateId,
+    );
+  }
+
+  void updateSelectedTemplateId(MessageTemplateModel template) {
+    selectedTemplateId.value = template.id!;
+
+    LocalStorage.saveData(
+      key: LocalStorageKey.messageTemplateId,
+      data: selectedTemplateId.value,
+    );
   }
 
   Future<void> getTemplateList() async {
@@ -25,9 +44,8 @@ class MessageTemplateController extends GetxController {
       isLoadingTemplateList(true);
       templateList.value = [];
 
-      QuerySnapshot<Map<String, dynamic>> querySnapshot = await _collection
-          .orderBy('timestamp', descending: true)
-          .get();
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _collection.orderBy('timestamp', descending: true).get();
 
       if (querySnapshot.docs.isEmpty) {
         String msg = 'No Templates Found!';

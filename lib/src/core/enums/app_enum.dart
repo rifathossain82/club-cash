@@ -1,5 +1,6 @@
 enum LocalStorageKey {
   userId,
+  messageTemplateId,
 }
 
 enum Status {

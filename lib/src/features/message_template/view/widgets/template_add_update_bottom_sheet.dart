@@ -184,7 +184,6 @@ class _MemberAddUpdateFormState extends State<TemplateAddUpdateForm> {
       id: widget.existingTemplate?.id,
       title: _titleTextController.text.trim(),
       message: _messageTextController.text.trim(),
-      timestamp: DateTime.now(),
     );
 
     _controller

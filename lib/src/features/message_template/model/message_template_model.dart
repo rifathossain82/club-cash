@@ -24,6 +24,7 @@ class MessageTemplateModel {
     );
   }
 
+  /// Don't want to store id, so ignore it.
   Map<String, dynamic> toJson() {
     return {
       'title': title,

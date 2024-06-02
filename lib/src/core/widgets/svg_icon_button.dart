@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SvgIconButton extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final String svgIconPath;
   final double? size;
   final Color? color;
 
   const SvgIconButton({
     super.key,
-    required this.onTap,
+    this.onTap,
     required this.svgIconPath,
     this.size,
     this.color,
