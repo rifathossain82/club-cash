@@ -24,7 +24,7 @@ class MemberController extends GetxController {
       memberList.value = [];
 
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _memberCollection.get();
+          await _memberCollection.orderBy('timestamp', descending: false).get();
 
       if (querySnapshot.docs.isEmpty) {
         String msg = 'No Members Found!';
@@ -57,10 +57,14 @@ class MemberController extends GetxController {
           withThumbnails: false,
         );
 
-        contactList.value = contacts.map((contact) => MemberModel(
-          name: contact.displayName ?? '',
-          phone: contact.phones?.isNotEmpty ?? false ? contact.phones!.first.value : '',
-        )).toList();
+        contactList.value = contacts
+            .map((contact) => MemberModel(
+                  name: contact.displayName ?? '',
+                  phone: contact.phones?.isNotEmpty ?? false
+                      ? contact.phones!.first.value
+                      : '',
+                ))
+            .toList();
       }
     } catch (e, stackTrace) {
       Log.error('$e', stackTrace: stackTrace);

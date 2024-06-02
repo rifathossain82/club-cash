@@ -33,13 +33,13 @@ extension BuildContextExtension on BuildContext {
       Theme.of(this).textTheme.titleSmall?.copyWith(
         fontWeight: FontWeight.w700,
         color: kWhite,
-        fontSize: 14,
+        fontSize: 12,
       );
 
   TextStyle? get outlinedButtonTextStyle =>
       Theme.of(this).textTheme.titleSmall?.copyWith(
         fontWeight: FontWeight.w700,
         color: kPrimaryColor,
-        fontSize: 14,
+        fontSize: 12,
       );
 }

@@ -144,6 +144,7 @@ class _MemberAddUpdateFormState extends State<MemberAddUpdateForm> {
                                       id: widget.existingMember?.id,
                                       name: _nameTextController.text.trim(),
                                       phone: _phoneTextController.text.trim(),
+                                      timestamp: widget.existingMember?.timestamp,
                                     ),
                                   )
                                   .then((value) => Navigator.pop(context));
@@ -153,6 +154,7 @@ class _MemberAddUpdateFormState extends State<MemberAddUpdateForm> {
                                     member: MemberModel(
                                       name: _nameTextController.text.trim(),
                                       phone: _phoneTextController.text.trim(),
+                                      timestamp: DateTime.now(),
                                     ),
                                   )
                                   .then((value) => Navigator.pop(context));

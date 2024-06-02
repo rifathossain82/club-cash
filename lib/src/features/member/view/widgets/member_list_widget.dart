@@ -20,20 +20,8 @@ class MemberListWidget extends StatelessWidget {
       return memberController.isLoadingMemberList.value ||
               memberController.isLoadingContactList.value
           ? const KCustomLoader()
-          : SingleChildScrollView(
-              child: ListView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  _AddedMemberList(
-                    isSelectable: isSelectable,
-                  ),
-                  const SizedBox(height: 15),
-                  _ContactList(
-                    isSelectable: isSelectable,
-                  ),
-                ],
-              ),
+          : _AddedMemberList(
+              isSelectable: isSelectable,
             );
     });
   }
@@ -53,8 +41,6 @@ class _AddedMemberList extends StatelessWidget {
       return memberController.memberList.isEmpty
           ? const SizedBox.shrink()
           : ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
               children: [
                 const TitleTextWidget(title: "Added Members : "),
                 ListView.separated(
@@ -65,42 +51,6 @@ class _AddedMemberList extends StatelessWidget {
                     data: memberController.memberList[index],
                     isSelectable: isSelectable,
                     isEditable: true,
-                  ),
-                  separatorBuilder: (context, index) =>
-                      const Divider(height: 0),
-                ),
-              ],
-            );
-    });
-  }
-}
-
-class _ContactList extends StatelessWidget {
-  final bool isSelectable;
-
-  const _ContactList({
-    required this.isSelectable,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final memberController = Get.find<MemberController>();
-    return Obx(() {
-      return memberController.contactList.isEmpty
-          ? const SizedBox.shrink()
-          : ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                const TitleTextWidget(title: "Member From Contacts : "),
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: memberController.contactList.length,
-                  itemBuilder: (context, index) => MemberItemWidget(
-                    data: memberController.contactList[index],
-                    isSelectable: isSelectable,
-                    isEditable: false,
                   ),
                   separatorBuilder: (context, index) =>
                       const Divider(height: 0),
