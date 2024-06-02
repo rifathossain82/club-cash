@@ -10,13 +10,14 @@ class KTextFormFieldBuilderWithTitle extends StatelessWidget {
   final FocusNode? focusNode;
   final IconData? prefixIconData;
   final Widget? suffixIcon;
-  final int? maxLine;
-  final int? minLine;
+  final int maxLine;
+  final int minLine;
   final Function(String value)? onChanged;
   final VoidCallback? onTap;
   final TextInputType? inputType;
   final TextInputAction? inputAction;
   final bool readOnly;
+  final bool obscureText;
   final double bottomPadding;
 
   const KTextFormFieldBuilderWithTitle({
@@ -28,12 +29,13 @@ class KTextFormFieldBuilderWithTitle extends StatelessWidget {
     this.focusNode,
     this.prefixIconData,
     this.suffixIcon,
-    this.maxLine,
-    this.minLine,
+    this.maxLine = 1,
+    this.minLine = 1,
     this.onChanged,
     this.onTap,
     this.inputAction = TextInputAction.next,
     this.inputType = TextInputType.text,
+    this.obscureText = false,
     this.readOnly = false,
     this.bottomPadding = 15,
   }) : super(key: key);
@@ -79,6 +81,7 @@ class KTextFormFieldBuilderWithTitle extends StatelessWidget {
           textInputAction: inputAction,
           textAlign: TextAlign.start,
           readOnly: readOnly,
+          obscureText: obscureText,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: context.appTextTheme.bodySmall,

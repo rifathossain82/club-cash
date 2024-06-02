@@ -1,3 +1,4 @@
+import 'package:club_cash/src/core/enums/app_enum.dart';
 import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/extensions/date_time_extension.dart';
 import 'package:club_cash/src/core/routes/routes.dart';
@@ -7,12 +8,20 @@ import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_divider.dart';
 import 'package:club_cash/src/core/widgets/status_builder.dart';
 import 'package:club_cash/src/core/widgets/svg_icon_button.dart';
+import 'package:club_cash/src/features/home/controller/transaction_controller.dart';
+import 'package:club_cash/src/features/home/model/transaction_model.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_update_page.dart';
+import 'package:club_cash/src/features/home/view/pages/cash_out_transaction_add_update_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TransactionItemWidget extends StatelessWidget {
-  const TransactionItemWidget({Key? key}) : super(key: key);
+  final TransactionModel transaction;
+
+  const TransactionItemWidget({
+    Key? key,
+    required this.transaction,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,17 +47,25 @@ class TransactionItemWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        "Jamal Uddin",
-                        style: context.appTextTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      transaction.type == TransactionType.cashIn.name
+                          ? Text(
+                              transaction.member?.name ?? "",
+                              style: context.appTextTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : Text(
+                              transaction.reason ?? '',
+                              style: context.appTextTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                       const SizedBox(height: 8),
-                      StatusBuilder(
-                        status: 'Cash',
-                        statusColor: kBlue,
-                      ),
+                      if (transaction.paymentMethod != null)
+                        StatusBuilder(
+                          status: transaction.paymentMethod ?? "",
+                          statusColor: kBlue,
+                        ),
                     ],
                   ),
                   const SizedBox(width: 8),
@@ -57,18 +74,21 @@ class TransactionItemWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "500",
+                        "${transaction.amount ?? 0}",
                         style: context.appTextTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: kGreen,
+                          color: transaction.type == TransactionType.cashIn.name
+                              ? kGreen
+                              : kRed,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${'Balance'}: 500',
+                        "${transaction.datetime?.formattedDateTime}",
+                        textAlign: TextAlign.start,
                         style: context.appTextTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w500,
                           color: kGreyTextColor,
+                          fontSize: 11,
                         ),
                       ),
                     ],
@@ -82,9 +102,9 @@ class TransactionItemWidget extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    DateTime.now().formattedDateTime,
-                    textAlign: TextAlign.start,
+                    'Remarks: ${transaction.remarks ?? ''}',
                     style: context.appTextTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
                       color: kGreyTextColor,
                       fontSize: 11,
                     ),
@@ -109,12 +129,21 @@ class TransactionItemWidget extends StatelessWidget {
   }
 
   void onEditTransaction() {
-    Get.toNamed(
-      RouteGenerator.cashInTransactionAddUpdate,
-      arguments: CashInTransactionAddUpdatePageArguments(
-        existingTransaction: "hi",
-      ),
-    );
+    if (transaction.type == TransactionType.cashIn.name) {
+      Get.toNamed(
+        RouteGenerator.cashInTransactionAddUpdate,
+        arguments: CashInTransactionAddUpdatePageArguments(
+          existingTransaction: transaction,
+        ),
+      );
+    } else if (transaction.type == TransactionType.cashOut.name) {
+      Get.toNamed(
+        RouteGenerator.cashOutTransactionAddUpdate,
+        arguments: CashOutTransactionAddUpdatePageArguments(
+          existingTransaction: transaction,
+        ),
+      );
+    }
   }
 
   void onDeleteTransaction(BuildContext context) async {
@@ -128,10 +157,10 @@ class TransactionItemWidget extends StatelessWidget {
     );
 
     if (result ?? false) {
-      // final contactController = Get.find<ContactController>();
-      // contactController.deleteContact(
-      //   id: '${data.id}',
-      // );
+      final transactionController = Get.find<TransactionController>();
+      transactionController.deleteTransaction(
+        transaction.id ?? '',
+      );
     }
   }
 }

@@ -1,5 +1,6 @@
 enum LocalStorageKey {
-  token,
+  userId,
+  messageTemplateId,
 }
 
 enum Status {
@@ -11,10 +12,20 @@ enum Status {
 
 enum PaymentMethod{
   cash,
-  online,
+  bkash,
+}
+
+enum TransactionType{
+  cashIn,
+  cashOut,
 }
 
 enum PopupMenuItemOptions {
   edit,
   delete,
+}
+
+enum FormStatus{
+  add,
+  update,
 }

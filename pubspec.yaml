@@ -25,7 +25,20 @@ dependencies:
   flutter_app_version_checker: ^0.3.2
   dropdown_search: ^3.0.1
   get_storage: ^2.0.3
+  contacts_service: ^0.6.3
+  permission_handler: ^10.4.3
+
+  # SMS:
+  flutter_sms:
+    git:
+      url: https://github.com/Flutter-Tent/flutter_sms.git
+
+  # State management:
   get: ^4.6.5
+
+  # Firebase:
+  firebase_core: any
+  cloud_firestore: any
 
 dev_dependencies:
   flutter_test:
@@ -37,3 +50,4 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/lotties/

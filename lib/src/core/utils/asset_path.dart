@@ -11,4 +11,8 @@ class AssetPath{
   static const String editIcon = 'assets/icons/edit.svg';
   static const String noDataFoundIcon = 'assets/icons/no_data_found.svg';
 
+
+  /// lotties
+  static const String logoutLottie = "assets/lotties/logout_lottie.json";
+
 }

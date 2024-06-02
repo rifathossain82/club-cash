@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:club_cash/src/core/di/app_bindings.dart';
 import 'package:club_cash/src/core/routes/routes.dart';
+import 'package:club_cash/src/core/services/firebase_services.dart';
 import 'package:club_cash/src/core/theme/app_theme.dart';
 import 'package:club_cash/src/core/utils/app_constants.dart';
 import 'package:club_cash/src/core/widgets/k_scroll_behavior.dart';
@@ -13,6 +14,7 @@ import 'package:get_storage/get_storage.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
+  await FirebaseService.init();
 
   /// Set preferred orientations to portrait only
   SystemChrome.setPreferredOrientations([

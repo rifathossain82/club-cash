@@ -27,10 +27,10 @@ class _SplashScreenState extends State<SplashPage>
   }
 
   void pageNavigation() async {
-    var token = LocalStorage.getData(key: LocalStorageKey.token);
+    var userId = LocalStorage.getData(key: LocalStorageKey.userId);
 
-    if(token != null){
-      Get.offAllNamed(RouteGenerator.login);
+    if(userId != null){
+      Get.offAllNamed(RouteGenerator.home);
     } else{
       Get.offAllNamed(RouteGenerator.login);
     }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "523535035268",
+    "project_id": "club-cash",
+    "storage_bucket": "club-cash.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:523535035268:android:caf6787105f22c5b328bd1",
+        "android_client_info": {
+          "package_name": "com.clubcash.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ3Ag1AHMoVjr5v6BWcVo78qAm8r3kj-o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,13 +1,18 @@
+import 'package:club_cash/src/core/enums/app_enum.dart';
 import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/helpers/validators.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_icon_button.dart';
 import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.dart';
+import 'package:club_cash/src/features/member/controller/member_controller.dart';
+import 'package:club_cash/src/features/member/model/member_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 Future<void> memberAddUpdateBottomSheet({
   required BuildContext context,
-  String? existingMember,
+  required FormStatus formStatus,
+  MemberModel? existingMember,
 }) {
   return showModalBottomSheet(
     context: context,
@@ -19,6 +24,7 @@ Future<void> memberAddUpdateBottomSheet({
     ),
     builder: (context) {
       return MemberAddUpdateForm(
+        formStatus: formStatus,
         existingMember: existingMember,
       );
     },
@@ -26,9 +32,14 @@ Future<void> memberAddUpdateBottomSheet({
 }
 
 class MemberAddUpdateForm extends StatefulWidget {
-  final String? existingMember;
+  final FormStatus formStatus;
+  final MemberModel? existingMember;
 
-  const MemberAddUpdateForm({Key? key, this.existingMember}) : super(key: key);
+  const MemberAddUpdateForm({
+    Key? key,
+    required this.formStatus,
+    this.existingMember,
+  }) : super(key: key);
 
   @override
   State<MemberAddUpdateForm> createState() => _MemberAddUpdateFormState();
@@ -37,8 +48,9 @@ class MemberAddUpdateForm extends StatefulWidget {
 class _MemberAddUpdateFormState extends State<MemberAddUpdateForm> {
   final _formKey = GlobalKey<FormState>();
   final _nameTextController = TextEditingController();
-  final _numberTextController = TextEditingController();
+  final _phoneTextController = TextEditingController();
   final _nameFocusNode = FocusNode();
+  final _memberController = Get.find<MemberController>();
 
   @override
   void initState() {
@@ -46,9 +58,9 @@ class _MemberAddUpdateFormState extends State<MemberAddUpdateForm> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _nameFocusNode.requestFocus();
 
-      if(widget.existingMember != null){
-        // _nameTextController.text = widget.existingMember!;
-        // _numberTextController.text = widget.existingMember!;
+      if (widget.existingMember != null) {
+        _nameTextController.text = widget.existingMember?.name ?? '';
+        _phoneTextController.text = widget.existingMember?.phone ?? '';
       }
     });
   }
@@ -56,7 +68,7 @@ class _MemberAddUpdateFormState extends State<MemberAddUpdateForm> {
   @override
   void dispose() {
     _nameTextController.dispose();
-    _numberTextController.dispose();
+    _phoneTextController.dispose();
     _nameFocusNode.dispose();
     super.dispose();
   }
@@ -83,7 +95,7 @@ class _MemberAddUpdateFormState extends State<MemberAddUpdateForm> {
                   ),
                 ),
                 Text(
-                  widget.existingMember != null
+                  widget.formStatus == FormStatus.update
                       ? "Update Member"
                       : "Add Member",
                   style: context.appTextTheme.titleSmall?.copyWith(
@@ -113,24 +125,49 @@ class _MemberAddUpdateFormState extends State<MemberAddUpdateForm> {
                       inputAction: TextInputAction.next,
                     ),
                     KTextFormFieldBuilderWithTitle(
-                      title: "Mobile Number",
-                      hintText: "Enter mobile number",
-                      controller: _numberTextController,
+                      title: "Phone Number",
+                      hintText: "Enter phone number",
+                      controller: _phoneTextController,
                       validator: Validators.phoneNumberValidator,
                       inputType: TextInputType.phone,
                       inputAction: TextInputAction.done,
                     ),
                     const SizedBox(height: 10),
-                    KIconButton(
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          // Add your member add/update logic here
-                          Navigator.pop(context); // Close the bottom sheet
-                        }
-                      },
-                      iconData: Icons.check,
-                      title: "save".toUpperCase(),
-                    ),
+                    Obx(() {
+                      return KIconButton(
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            if (widget.formStatus == FormStatus.update) {
+                              _memberController
+                                  .updateMember(
+                                    oldPhoneNumber: widget.existingMember?.phone,
+                                    member: MemberModel(
+                                      id: widget.existingMember?.id,
+                                      name: _nameTextController.text.trim(),
+                                      phone: _phoneTextController.text.trim(),
+                                      timestamp: widget.existingMember?.timestamp,
+                                    ),
+                                  )
+                                  .then((value) => Navigator.pop(context));
+                            } else {
+                              _memberController
+                                  .addMember(
+                                    member: MemberModel(
+                                      name: _nameTextController.text.trim(),
+                                      phone: _phoneTextController.text.trim(),
+                                      timestamp: DateTime.now(),
+                                    ),
+                                  )
+                                  .then((value) => Navigator.pop(context));
+                            }
+                          }
+                        },
+                        iconData: Icons.check,
+                        title: "save".toUpperCase(),
+                        isLoading: _memberController.isAddingMember.value ||
+                            _memberController.isUpdatingMember.value,
+                      );
+                    }),
                   ],
                 ),
               ),
