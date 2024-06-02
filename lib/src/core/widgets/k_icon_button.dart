@@ -13,6 +13,7 @@ class KIconButton extends StatelessWidget {
     this.bgColor,
     this.height,
     this.width,
+    this.textStyle,
     this.isLoading = false,
   }) : super(key: key);
 
@@ -23,6 +24,7 @@ class KIconButton extends StatelessWidget {
   final Color? bgColor;
   final double? height;
   final double? width;
+  final TextStyle? textStyle;
   final bool isLoading;
 
   @override
@@ -52,7 +54,7 @@ class KIconButton extends StatelessWidget {
                 Flexible(
                   child: Text(
                     title,
-                    style: context.buttonTextStyle,
+                    style: textStyle ?? context.buttonTextStyle,
                   ),
                 ),
               ],

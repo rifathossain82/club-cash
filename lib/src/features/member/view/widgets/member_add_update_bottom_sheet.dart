@@ -140,6 +140,7 @@ class _MemberAddUpdateFormState extends State<MemberAddUpdateForm> {
                             if (widget.formStatus == FormStatus.update) {
                               _memberController
                                   .updateMember(
+                                    oldPhoneNumber: widget.existingMember?.phone,
                                     member: MemberModel(
                                       id: widget.existingMember?.id,
                                       name: _nameTextController.text.trim(),

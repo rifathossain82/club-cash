@@ -1,5 +1,6 @@
 import 'package:club_cash/src/core/enums/app_enum.dart';
 import 'package:club_cash/src/core/extensions/string_extension.dart';
+import 'package:club_cash/src/core/helpers/logger.dart';
 import 'package:club_cash/src/core/helpers/validators.dart';
 import 'package:club_cash/src/core/routes/routes.dart';
 import 'package:club_cash/src/core/utils/color.dart';
@@ -150,6 +151,7 @@ class _TransactionAddUpdatePageState
                   if(result is MemberModel){
                     setState(() {
                       selectedMember = result;
+                      Log.info(selectedMember?.id ?? '');
                     });
                   }
                 },

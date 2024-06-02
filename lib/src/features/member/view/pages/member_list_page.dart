@@ -5,6 +5,7 @@ import 'package:club_cash/src/core/widgets/k_box_shadow.dart';
 import 'package:club_cash/src/core/widgets/k_icon_button.dart';
 import 'package:club_cash/src/core/widgets/k_search_field.dart';
 import 'package:club_cash/src/features/member/controller/member_controller.dart';
+import 'package:club_cash/src/features/member/model/member_model.dart';
 import 'package:club_cash/src/features/member/view/widgets/member_add_update_bottom_sheet.dart';
 import 'package:club_cash/src/features/member/view/widgets/member_list_widget.dart';
 import 'package:contacts_service/contacts_service.dart';
@@ -30,9 +31,7 @@ class _MemberPickerPageState extends State<MemberListPage> {
   @override
   void initState() {
     super.initState();
-    memberController
-      ..getMemberList()
-      ..getContactList();
+    memberController.getMemberList();
   }
 
   @override
@@ -67,14 +66,17 @@ class _MemberPickerPageState extends State<MemberListPage> {
     );
   }
 
-
   void _onAddFromContact() async {
     var result = await Get.toNamed(RouteGenerator.selectableContactList);
 
-    if(result is Contact){
+    if (result is Contact) {
       await memberAddUpdateBottomSheet(
         context: context,
         formStatus: FormStatus.add,
+        existingMember: MemberModel(
+          name: "${result.displayName}",
+          phone: "${result.phones?.first.value}"
+        )
       );
     }
   }
@@ -112,7 +114,7 @@ class _BottomNavigationBar extends StatelessWidget {
             child: KIconButton(
               onPressed: onAddFromContact,
               iconData: Icons.contacts_outlined,
-              title: "Select Contact".toUpperCase(),
+              title: "Add Contact".toUpperCase(),
               bgColor: kGreen,
             ),
           ),

@@ -15,13 +15,11 @@ import 'package:get/get.dart';
 class MemberItemWidget extends StatelessWidget {
   final MemberModel data;
   final bool isSelectable;
-  final bool isEditable;
 
   const MemberItemWidget({
     Key? key,
     required this.data,
     required this.isSelectable,
-    required this.isEditable,
   }) : super(key: key);
 
   @override
@@ -29,14 +27,8 @@ class MemberItemWidget extends StatelessWidget {
     int index = Random().nextInt(randomColors.length);
     return GestureDetector(
       onTap: () async {
-        if (isSelectable && isEditable) {
+        if (isSelectable) {
           Navigator.pop(context, data);
-        } if (isEditable == false) {
-          await memberAddUpdateBottomSheet(
-            formStatus: FormStatus.add,
-            context: context,
-            existingMember: data,
-          );
         }
       },
       child: ListTile(
@@ -74,37 +66,35 @@ class MemberItemWidget extends StatelessWidget {
             color: kGreyTextColor,
           ),
         ),
-        trailing: isEditable
-            ? PopupMenuButton(
-                color: kWhite,
-                onSelected: (value) {
-                  if (value == PopupMenuItemOptions.edit) {
-                    _onUpdateMember(context);
-                  } else {
-                    _onDeleteMember(context);
-                  }
-                },
-                icon: Icon(
-                  Icons.more_vert_outlined,
-                  color: kGrey,
-                  size: 20,
-                ),
-                itemBuilder: (BuildContext context) => [
-                  popupMenuItemBuilder(
-                    value: PopupMenuItemOptions.edit,
-                    icon: Icons.edit_outlined,
-                    iconColor: kGrey,
-                    title: PopupMenuItemOptions.edit.name.capitalizedFirst,
-                  ),
-                  popupMenuItemBuilder(
-                    value: PopupMenuItemOptions.delete,
-                    icon: Icons.delete_outline,
-                    iconColor: kGrey,
-                    title: PopupMenuItemOptions.delete.name.capitalizedFirst,
-                  ),
-                ],
-              )
-            : const SizedBox.shrink(),
+        trailing: PopupMenuButton(
+          color: kWhite,
+          onSelected: (value) {
+            if (value == PopupMenuItemOptions.edit) {
+              _onUpdateMember(context);
+            } else {
+              _onDeleteMember(context);
+            }
+          },
+          icon: Icon(
+            Icons.more_vert_outlined,
+            color: kGrey,
+            size: 20,
+          ),
+          itemBuilder: (BuildContext context) => [
+            popupMenuItemBuilder(
+              value: PopupMenuItemOptions.edit,
+              icon: Icons.edit_outlined,
+              iconColor: kGrey,
+              title: PopupMenuItemOptions.edit.name.capitalizedFirst,
+            ),
+            popupMenuItemBuilder(
+              value: PopupMenuItemOptions.delete,
+              icon: Icons.delete_outline,
+              iconColor: kGrey,
+              title: PopupMenuItemOptions.delete.name.capitalizedFirst,
+            ),
+          ],
+        ),
       ),
     );
   }
