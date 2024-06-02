@@ -1,15 +1,19 @@
+import 'package:club_cash/src/core/enums/app_enum.dart';
+import 'package:club_cash/src/core/extensions/date_time_extension.dart';
 import 'package:club_cash/src/core/helpers/validators.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_box_shadow.dart';
 import 'package:club_cash/src/core/widgets/k_drop_down_search_builder_with_title.dart';
 import 'package:club_cash/src/core/widgets/k_icon_button.dart';
 import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.dart';
+import 'package:club_cash/src/features/home/controller/home_controller.dart';
+import 'package:club_cash/src/features/home/model/transaction_model.dart';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 
 class CashOutTransactionAddUpdatePageArguments {
-  final String? existingTransaction;
+  final TransactionModel? existingTransaction;
 
   CashOutTransactionAddUpdatePageArguments({
     this.existingTransaction,
@@ -31,11 +35,12 @@ class CashOutTransactionAddUpdatePage extends StatefulWidget {
 
 class _TransactionAddUpdatePageState
     extends State<CashOutTransactionAddUpdatePage> {
+  final transactionController = Get.find<TransactionController>();
+  TransactionModel? existingTransaction;
   final formKey = GlobalKey<FormState>();
   final amountTextController = TextEditingController();
   final remarkTextController = TextEditingController();
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
+  DateTime? selectedDateTime = DateTime.now();
   String? selectedReason;
 
   final List<String> cashOutReasons = const [
@@ -56,40 +61,48 @@ class _TransactionAddUpdatePageState
     "Others",
   ];
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDateTime(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(1950),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? time = await showTimePicker(
       context: context,
-      initialTime: selectedTime,
+      initialDate: selectedDateTime!,
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
     );
-
-    if (time != null && time != selectedTime) {
-      setState(() {
-        selectedTime = time;
-      });
+    if (picked != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+      if (pickedTime != null) {
+        setState(() {
+          selectedDateTime = DateTime(
+            picked.year,
+            picked.month,
+            picked.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+        });
+      }
     }
   }
 
   @override
   void initState() {
     super.initState();
-    if (widget.arguments.existingTransaction != null) {
-      amountTextController.text = "100";
-      remarkTextController.text = "Sample remark";
-      selectedReason = "Equipment Purchase";
-    }
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (widget.arguments.existingTransaction != null) {
+        existingTransaction = widget.arguments.existingTransaction;
+
+        selectedDateTime = existingTransaction?.datetime;
+        amountTextController.text = "${existingTransaction?.amount ?? 0}";
+        selectedReason = existingTransaction?.reason ?? '';
+        remarkTextController.text = existingTransaction?.remarks ?? '';
+      }
+
+      setState(() {});
+    });
   }
 
   @override
@@ -114,6 +127,7 @@ class _TransactionAddUpdatePageState
       body: _transactionFormWidget(),
       bottomNavigationBar: _BottomNavigationBar(
         onSave: _onSave,
+        transactionController: transactionController,
       ),
     );
   }
@@ -127,32 +141,13 @@ class _TransactionAddUpdatePageState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: KTextFormFieldBuilderWithTitle(
-                      title: 'Date',
-                      hintText: DateFormat('dd-MM-yyyy').format(selectedDate),
-                      inputAction: TextInputAction.next,
-                      validator: Validators.emptyValidator,
-                      readOnly: true,
-                      prefixIconData: Icons.date_range,
-                      onTap: () => _selectDate(context),
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: KTextFormFieldBuilderWithTitle(
-                      title: 'Time',
-                      hintText: selectedTime.format(context),
-                      inputAction: TextInputAction.next,
-                      validator: Validators.emptyValidator,
-                      readOnly: true,
-                      prefixIconData: Icons.access_time_outlined,
-                      onTap: () => _selectTime(context),
-                    ),
-                  ),
-                ],
+              KTextFormFieldBuilderWithTitle(
+                title: 'Date & Time',
+                hintText: selectedDateTime?.formattedDateTime,
+                inputAction: TextInputAction.next,
+                readOnly: true,
+                prefixIconData: Icons.date_range,
+                onTap: () => _selectDateTime(context),
               ),
               KTextFormFieldBuilderWithTitle(
                 controller: amountTextController,
@@ -190,14 +185,55 @@ class _TransactionAddUpdatePageState
     );
   }
 
-  void _onSave() {}
+  void _onSave() {
+    if (formKey.currentState!.validate()) {
+      if (existingTransaction == null) {
+        addCashOutTransaction();
+      } else {
+        updateCashOutTransaction();
+      }
+    }
+  }
+
+  void addCashOutTransaction() {
+    final cashOutTransaction = TransactionModel(
+      datetime: selectedDateTime,
+      amount: num.parse(amountTextController.text),
+      reason: selectedReason,
+      remarks: remarkTextController.text.trim(),
+      type: TransactionType.cashOut.name,
+      timestamp: DateTime.now(),
+    );
+
+    transactionController
+        .addTransaction(transaction: cashOutTransaction)
+        .then((value) => Navigator.pop(context));
+  }
+
+  void updateCashOutTransaction() {
+    final cashOutTransaction = TransactionModel(
+      id: existingTransaction?.id,
+      datetime: selectedDateTime,
+      amount: num.parse(amountTextController.text),
+      reason: selectedReason,
+      remarks: remarkTextController.text.trim(),
+      type: TransactionType.cashOut.name,
+      timestamp: DateTime.now(),
+    );
+
+    transactionController
+        .updateTransaction(transaction: cashOutTransaction)
+        .then((value) => Navigator.pop(context));
+  }
 }
 
 class _BottomNavigationBar extends StatelessWidget {
   final VoidCallback onSave;
+  final TransactionController transactionController;
 
   const _BottomNavigationBar({
     required this.onSave,
+    required this.transactionController,
   });
 
   @override
@@ -210,12 +246,16 @@ class _BottomNavigationBar extends StatelessWidget {
           KBoxShadow.top(),
         ],
       ),
-      child: KIconButton(
-        onPressed: onSave,
-        iconData: Icons.check,
-        title: "save".toUpperCase(),
-        bgColor: kRed,
-      ),
+      child: Obx(() {
+        return KIconButton(
+          onPressed: onSave,
+          iconData: Icons.check,
+          title: "save".toUpperCase(),
+          bgColor: kGreen,
+          isLoading: transactionController.isAddingTransaction.value ||
+              transactionController.isUpdatingTransaction.value,
+        );
+      }),
     );
   }
 }

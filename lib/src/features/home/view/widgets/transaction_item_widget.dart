@@ -11,6 +11,7 @@ import 'package:club_cash/src/core/widgets/svg_icon_button.dart';
 import 'package:club_cash/src/features/home/controller/home_controller.dart';
 import 'package:club_cash/src/features/home/model/transaction_model.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_update_page.dart';
+import 'package:club_cash/src/features/home/view/pages/cash_out_transaction_add_update_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -46,17 +47,25 @@ class TransactionItemWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        transaction.member?.name ?? "",
-                        style: context.appTextTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      transaction.type == TransactionType.cashIn.name
+                          ? Text(
+                              transaction.member?.name ?? "",
+                              style: context.appTextTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : Text(
+                              transaction.reason ?? '',
+                              style: context.appTextTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                       const SizedBox(height: 8),
-                      StatusBuilder(
-                        status: transaction.paymentMethod ?? "",
-                        statusColor: kBlue,
-                      ),
+                      if (transaction.paymentMethod != null)
+                        StatusBuilder(
+                          status: transaction.paymentMethod ?? "",
+                          statusColor: kBlue,
+                        ),
                     ],
                   ),
                   const SizedBox(width: 8),
@@ -120,12 +129,21 @@ class TransactionItemWidget extends StatelessWidget {
   }
 
   void onEditTransaction() {
-    Get.toNamed(
-      RouteGenerator.cashInTransactionAddUpdate,
-      arguments: CashInTransactionAddUpdatePageArguments(
-        existingTransaction: transaction,
-      ),
-    );
+    if (transaction.type == TransactionType.cashIn.name) {
+      Get.toNamed(
+        RouteGenerator.cashInTransactionAddUpdate,
+        arguments: CashInTransactionAddUpdatePageArguments(
+          existingTransaction: transaction,
+        ),
+      );
+    } else if (transaction.type == TransactionType.cashOut.name) {
+      Get.toNamed(
+        RouteGenerator.cashOutTransactionAddUpdate,
+        arguments: CashOutTransactionAddUpdatePageArguments(
+          existingTransaction: transaction,
+        ),
+      );
+    }
   }
 
   void onDeleteTransaction(BuildContext context) async {

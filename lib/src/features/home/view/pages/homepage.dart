@@ -192,13 +192,17 @@ class Homepage extends StatelessWidget {
   }
 
   void _onCashIn() {
-    Get.toNamed(RouteGenerator.cashInTransactionAddUpdate,
-        arguments: CashInTransactionAddUpdatePageArguments());
+    Get.toNamed(
+      RouteGenerator.cashInTransactionAddUpdate,
+      arguments: CashInTransactionAddUpdatePageArguments(),
+    );
   }
 
   void _onCashOut() {
-    Get.toNamed(RouteGenerator.cashOutTransactionAddUpdate,
-        arguments: CashOutTransactionAddUpdatePageArguments());
+    Get.toNamed(
+      RouteGenerator.cashOutTransactionAddUpdate,
+      arguments: CashOutTransactionAddUpdatePageArguments(),
+    );
   }
 }
 
