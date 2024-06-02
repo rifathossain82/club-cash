@@ -4,11 +4,14 @@ import 'package:club_cash/src/core/utils/app_constants.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_icon_button.dart';
 import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.dart';
+import 'package:club_cash/src/features/message_template/controller/message_template_controller.dart';
+import 'package:club_cash/src/features/message_template/model/message_template_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 Future<void> templateAddUpdateBottomSheet({
   required BuildContext context,
-  String? existingTemplate,
+  MessageTemplateModel? existingTemplate,
 }) {
   return showModalBottomSheet(
     context: context,
@@ -27,7 +30,7 @@ Future<void> templateAddUpdateBottomSheet({
 }
 
 class TemplateAddUpdateForm extends StatefulWidget {
-  final String? existingTemplate;
+  final MessageTemplateModel? existingTemplate;
 
   const TemplateAddUpdateForm({
     Key? key,
@@ -39,6 +42,7 @@ class TemplateAddUpdateForm extends StatefulWidget {
 }
 
 class _MemberAddUpdateFormState extends State<TemplateAddUpdateForm> {
+  final _controller = Get.find<MessageTemplateController>();
   final _formKey = GlobalKey<FormState>();
   final _titleTextController = TextEditingController();
   final _messageTextController = TextEditingController();
@@ -51,8 +55,8 @@ class _MemberAddUpdateFormState extends State<TemplateAddUpdateForm> {
       _titleFocusNode.requestFocus();
 
       if (widget.existingTemplate != null) {
-        // _nameTextController.text = widget.existingMember!;
-        // _numberTextController.text = widget.existingMember!;
+        _titleTextController.text = widget.existingTemplate?.title ?? '';
+        _messageTextController.text = widget.existingTemplate?.message ?? '';
       }
     });
   }
@@ -123,6 +127,7 @@ class _MemberAddUpdateFormState extends State<TemplateAddUpdateForm> {
                       validator: Validators.emptyValidator,
                       inputType: TextInputType.text,
                       inputAction: TextInputAction.done,
+                      maxLine: 4,
                     ),
                     Text(
                       AppConstants.messageTemplateAlertText,
@@ -132,16 +137,16 @@ class _MemberAddUpdateFormState extends State<TemplateAddUpdateForm> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    KIconButton(
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          // Add your member add/update logic here
-                          Navigator.pop(context); // Close the bottom sheet
-                        }
-                      },
-                      iconData: Icons.check,
-                      title: "save".toUpperCase(),
-                    ),
+                    Obx(() {
+                      return KIconButton(
+                        onPressed: _onSave,
+                        iconData: Icons.check,
+                        title: "save".toUpperCase(),
+                        bgColor: kPrimaryColor,
+                        isLoading: _controller.isAddingTemplate.value ||
+                            _controller.isUpdatingTemplate.value,
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -150,5 +155,40 @@ class _MemberAddUpdateFormState extends State<TemplateAddUpdateForm> {
         ),
       ),
     );
+  }
+
+  void _onSave() {
+    if (_formKey.currentState?.validate() ?? false) {
+      if (widget.existingTemplate == null) {
+        _addNewTemplate();
+      } else {
+        _updateTemplate();
+      }
+    }
+  }
+
+  void _addNewTemplate() {
+    final newTemplate = MessageTemplateModel(
+      title: _titleTextController.text.trim(),
+      message: _messageTextController.text.trim(),
+      timestamp: DateTime.now(),
+    );
+
+    _controller
+        .addTemplate(template: newTemplate)
+        .then((value) => Navigator.pop(context));
+  }
+
+  void _updateTemplate() {
+    final newTemplate = MessageTemplateModel(
+      id: widget.existingTemplate?.id,
+      title: _titleTextController.text.trim(),
+      message: _messageTextController.text.trim(),
+      timestamp: DateTime.now(),
+    );
+
+    _controller
+        .updateTemplate(template: newTemplate)
+        .then((value) => Navigator.pop(context));
   }
 }

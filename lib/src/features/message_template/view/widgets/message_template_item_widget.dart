@@ -3,15 +3,22 @@ import 'package:club_cash/src/core/services/dialog_service.dart';
 import 'package:club_cash/src/core/utils/asset_path.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/svg_icon_button.dart';
+import 'package:club_cash/src/features/message_template/controller/message_template_controller.dart';
+import 'package:club_cash/src/features/message_template/model/message_template_model.dart';
 import 'package:club_cash/src/features/message_template/view/widgets/template_add_update_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MessageTemplateItemWidget extends StatelessWidget {
-  const MessageTemplateItemWidget({super.key});
+  final MessageTemplateModel template;
+
+  const MessageTemplateItemWidget({
+    super.key,
+    required this.template,
+  });
 
   @override
   Widget build(BuildContext context) {
-    String msg = 'Dear customer,\nYou have purchased %d TK products from %s. thanks for shopping with us!';
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -30,7 +37,7 @@ class MessageTemplateItemWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  "Common SMS",
+                  template.title ?? '',
                   maxLines: 1,
                   textAlign: TextAlign.start,
                   style: context.appTextTheme.titleSmall?.copyWith(
@@ -51,7 +58,7 @@ class MessageTemplateItemWidget extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            msg,
+            template.message ?? '',
             textAlign: TextAlign.start,
             style: context.appTextTheme.bodySmall,
           ),
@@ -61,7 +68,10 @@ class MessageTemplateItemWidget extends StatelessWidget {
   }
 
   void onEditTemplate(BuildContext context) async {
-    await templateAddUpdateBottomSheet(context: context);
+    await templateAddUpdateBottomSheet(
+      context: context,
+      existingTemplate: template,
+    );
   }
 
   void onDeleteTemplate(BuildContext context) async {
@@ -75,10 +85,10 @@ class MessageTemplateItemWidget extends StatelessWidget {
     );
 
     if (result ?? false) {
-      // final contactController = Get.find<ContactController>();
-      // contactController.deleteContact(
-      //   id: '${data.id}',
-      // );
+      final contactController = Get.find<MessageTemplateController>();
+      contactController.deleteTemplate(
+        template.id ?? '',
+      );
     }
   }
 }
