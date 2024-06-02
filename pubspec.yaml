@@ -28,6 +28,11 @@ dependencies:
   contacts_service: ^0.6.3
   permission_handler: ^10.4.3
 
+  # SMS:
+  flutter_sms:
+    git:
+      url: https://github.com/Flutter-Tent/flutter_sms.git
+
   # State management:
   get: ^4.6.5
 

@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PermissionManager {
+  static Future<bool> requestSmsPermission() async {
+    return await _requestPermission(
+      permission: Permission.sms,
+      permissionName: 'SMS',
+    );
+  }
+
   static Future<bool> requestContactPermission() async {
     return await _requestPermission(
       permission: Permission.contacts,

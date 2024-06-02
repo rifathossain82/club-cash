@@ -99,6 +99,7 @@ class _LoginFormState extends State<_LoginForm> {
             inputAction: TextInputAction.next,
             prefixIconData: Icons.lock_outline,
             bottomPadding: 0,
+            obscureText: _isPasswordVisible,
             suffixIcon: GestureDetector(
               onTap: () {
                 setState(() {
@@ -111,8 +112,8 @@ class _LoginFormState extends State<_LoginForm> {
               ),
             ),
           ),
-          const ForgotPasswordButton(),
-          const SizedBox(height: 15),
+          // const ForgotPasswordButton(),
+          const SizedBox(height: 25),
           KButton(
             onPressed: _onLogin,
             borderRadius: 4,

@@ -1,8 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:club_cash/src/core/enums/app_enum.dart';
 import 'package:club_cash/src/core/helpers/logger.dart';
+import 'package:club_cash/src/core/services/local_storage.dart';
+import 'package:club_cash/src/core/services/permission_manager.dart';
 import 'package:club_cash/src/core/services/snack_bar_services.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/features/home/model/transaction_model.dart';
+import 'package:club_cash/src/features/member/controller/member_controller.dart';
+import 'package:club_cash/src/features/message_template/model/message_template_model.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:get/get.dart';
 
 class TransactionController extends GetxController {
@@ -24,9 +30,32 @@ class TransactionController extends GetxController {
     reload();
   }
 
-  void reload() {
-    getTransactionSummary();
-    getTransactionList();
+  Future<void> reload() async {
+    await Future.wait([
+      getTransactionSummary(),
+      getTransactionList(),
+    ]);
+  }
+
+  Future<void> sendConfirmationSMS() async {
+    final List<String> phoneNumbers =
+        await Get.find<MemberController>().getMemberPhoneNumbers();
+    // final MessageTemplateModel messageTemplate = LocalStorage.getData(key: LocalStorageKey.messageTemplateId)
+
+    /// To send sms.
+    try {
+      if(await PermissionManager.requestSmsPermission()) {
+        await sendSMS(
+          message: 'Transaction Updated',
+          recipients: phoneNumbers,
+          sendDirect: true,
+        );
+
+        Log.debug("Send Confirmation SMS Successfully!");
+      }
+    } catch (e, stackTrace) {
+      Log.error('$e', stackTrace: stackTrace);
+    }
   }
 
   Future<void> getTransactionSummary() async {
@@ -96,7 +125,8 @@ class TransactionController extends GetxController {
       isAddingTransaction(true);
 
       await _collection.add(transaction.toJson());
-      reload();
+      await reload();
+      // await sendConfirmationSMS();
       SnackBarService.showSnackBar(
         message: "Transaction added successfully!",
         bgColor: successColor,

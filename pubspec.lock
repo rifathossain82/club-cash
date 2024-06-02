@@ -272,6 +272,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.15"
+  flutter_sms:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "21b20da4a8cd9c3b182f8e53485b5b3f7e28545d"
+      url: "https://github.com/Flutter-Tent/flutter_sms.git"
+    source: git
+    version: "2.3.3"
   flutter_svg:
     dependency: "direct main"
     description:

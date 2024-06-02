@@ -42,6 +42,20 @@ class MemberController extends GetxController {
     }
   }
 
+  Future<List<String>> getMemberPhoneNumbers() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _memberCollection.orderBy('timestamp', descending: false).get();
+
+      return querySnapshot.docs
+          .map((doc) => doc.data()['phone'].toString())
+          .toList();
+    } catch (e, stackTrace) {
+      Log.error('$e', stackTrace: stackTrace);
+      return [];
+    }
+  }
+
   Future<bool> isDuplicateMember(dynamic phone) async {
     try {
       final querySnapshot =
