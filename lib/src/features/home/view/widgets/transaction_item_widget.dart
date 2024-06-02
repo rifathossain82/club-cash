@@ -8,7 +8,7 @@ import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_divider.dart';
 import 'package:club_cash/src/core/widgets/status_builder.dart';
 import 'package:club_cash/src/core/widgets/svg_icon_button.dart';
-import 'package:club_cash/src/features/home/controller/home_controller.dart';
+import 'package:club_cash/src/features/home/controller/transaction_controller.dart';
 import 'package:club_cash/src/features/home/model/transaction_model.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_update_page.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_out_transaction_add_update_page.dart';

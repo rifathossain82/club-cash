@@ -6,18 +6,61 @@ import 'package:club_cash/src/features/home/model/transaction_model.dart';
 import 'package:get/get.dart';
 
 class TransactionController extends GetxController {
+  var isLoadingSummary = false.obs;
   var isLoadingTransactionList = false.obs;
   var isAddingTransaction = false.obs;
   var isUpdatingTransaction = false.obs;
   var isDeletingTransaction = false.obs;
   var transactionList = <TransactionModel>[].obs;
+  var netBalance = 0.0.obs;
+  var totalCashIn = 0.0.obs;
+  var totalCashOut = 0.0.obs;
 
   final _collection = FirebaseFirestore.instance.collection('transactions');
 
   @override
   void onInit() {
     super.onInit();
+    reload();
+  }
+
+  void reload() {
+    getTransactionSummary();
     getTransactionList();
+  }
+
+  Future<void> getTransactionSummary() async {
+    isLoadingSummary(true);
+    try {
+      /// Fetch cashIn transactions
+      QuerySnapshot<Map<String, dynamic>> cashInSnapshot =
+          await _collection.where("type", isEqualTo: "cashIn").get();
+
+      double sumOfCashIn = cashInSnapshot.docs
+          .map((doc) => doc.data()['amount'] as num)
+          .fold(0, (prev, amount) => prev + amount);
+
+      /// Fetch cashOut transactions
+      QuerySnapshot<Map<String, dynamic>> cashOutSnapshot =
+          await _collection.where("type", isEqualTo: "cashOut").get();
+
+      double sumOfCashOut = cashOutSnapshot.docs
+          .map((doc) => doc.data()['amount'] as num)
+          .fold(0, (prev, amount) => prev + amount);
+
+      netBalance.value = sumOfCashIn - sumOfCashOut;
+      totalCashIn.value = sumOfCashIn;
+      totalCashOut.value = sumOfCashOut;
+    } catch (e, stackTrace) {
+      Log.error('$e', stackTrace: stackTrace);
+
+      SnackBarService.showSnackBar(
+        message: e.toString(),
+        bgColor: failedColor,
+      );
+    } finally {
+      isLoadingSummary(false);
+    }
   }
 
   Future<void> getTransactionList() async {
@@ -25,9 +68,8 @@ class TransactionController extends GetxController {
       isLoadingTransactionList(true);
       transactionList.value = [];
 
-      QuerySnapshot<Map<String, dynamic>> querySnapshot = await _collection
-          .orderBy('timestamp', descending: true)
-          .get();
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _collection.orderBy('timestamp', descending: true).get();
 
       if (querySnapshot.docs.isEmpty) {
         String msg = 'No Transactions Found!';
@@ -54,7 +96,7 @@ class TransactionController extends GetxController {
       isAddingTransaction(true);
 
       await _collection.add(transaction.toJson());
-      getTransactionList();
+      reload();
       SnackBarService.showSnackBar(
         message: "Transaction added successfully!",
         bgColor: successColor,
@@ -78,7 +120,7 @@ class TransactionController extends GetxController {
       isUpdatingTransaction(true);
 
       await _collection.doc(transaction.id).update(transaction.toJson());
-      getTransactionList();
+      reload();
       SnackBarService.showSnackBar(
         message: "Transaction updated successfully!",
         bgColor: successColor,
@@ -101,7 +143,7 @@ class TransactionController extends GetxController {
 
       await _collection.doc(transactionId).delete();
 
-      getTransactionList();
+      reload();
       SnackBarService.showSnackBar(
         message: "Transaction deleted successfully!",
         bgColor: successColor,

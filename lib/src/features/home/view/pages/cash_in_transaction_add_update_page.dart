@@ -9,7 +9,7 @@ import 'package:club_cash/src/core/widgets/k_box_shadow.dart';
 import 'package:club_cash/src/core/widgets/k_drop_down_field_builder_with_title.dart';
 import 'package:club_cash/src/core/widgets/k_icon_button.dart';
 import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.dart';
-import 'package:club_cash/src/features/home/controller/home_controller.dart';
+import 'package:club_cash/src/features/home/controller/transaction_controller.dart';
 import 'package:club_cash/src/features/home/model/transaction_model.dart';
 import 'package:club_cash/src/features/member/model/member_model.dart';
 

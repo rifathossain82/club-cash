@@ -1,7 +1,7 @@
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/failure_widget_builder.dart';
 import 'package:club_cash/src/core/widgets/k_custom_loader.dart';
-import 'package:club_cash/src/features/home/controller/home_controller.dart';
+import 'package:club_cash/src/features/home/controller/transaction_controller.dart';
 import 'package:club_cash/src/features/home/view/widgets/transaction_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -47,7 +47,7 @@ class _TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      physics: const BouncingScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(15),
       itemCount: controller.transactionList.length,
       itemBuilder: (context, index) => TransactionItemWidget(
