@@ -9,6 +9,15 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
+    <!-- For send sms -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="smsto"/>
+        </intent>
+    </queries>
+
    <application
         android:label="Club Cash"
         android:name="${applicationName}"
