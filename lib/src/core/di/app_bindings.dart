@@ -4,6 +4,7 @@ import 'package:club_cash/src/features/home/controller/transaction_controller.da
 import 'package:club_cash/src/features/member/controller/member_controller.dart';
 import 'package:club_cash/src/features/message_history/controller/message_history_controller.dart';
 import 'package:club_cash/src/features/message_template/controller/message_template_controller.dart';
+import 'package:club_cash/src/features/settings/controller/settings_controller.dart';
 import 'package:get/get.dart';
 
 class AppBindings extends Bindings {
@@ -15,5 +16,6 @@ class AppBindings extends Bindings {
     Get.lazyPut(() => TransactionController(), fenix: true);
     Get.lazyPut(() => MessageTemplateController(), fenix: true);
     Get.lazyPut(() => MessageHistoryController(), fenix: true);
+    Get.lazyPut(() => SettingsController(), fenix: true);
   }
 }

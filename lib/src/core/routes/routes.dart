@@ -7,6 +7,7 @@ import 'package:club_cash/src/features/home/view/pages/homepage.dart';
 import 'package:club_cash/src/features/member/view/pages/member_list_page.dart';
 import 'package:club_cash/src/features/message_history/view/pages/message_history_page.dart';
 import 'package:club_cash/src/features/message_template/view/pages/message_template_page.dart';
+import 'package:club_cash/src/features/settings/view/pages/settings_page.dart';
 import 'package:club_cash/src/features/splash/view/pages/splash_page.dart';
 import 'package:get/get.dart';
 
@@ -23,6 +24,7 @@ class RouteGenerator {
   static const String messageTemplate = '/message-template';
   static const String messageHistory = '/message-history';
   static const String selectableContactList = '/selectable-contact-list';
+  static const String settings = '/settings';
 
   static final routes = [
     GetPage(
@@ -56,12 +58,14 @@ class RouteGenerator {
     GetPage(
       name: RouteGenerator.memberListPage,
       page: () => MemberListPage(
-        isSelectable: Get.arguments as bool,
+        argument: Get.arguments as MemberListPageArgument,
       ),
     ),
     GetPage(
       name: RouteGenerator.messageTemplate,
-      page: () => const MessageTemplatePage(),
+      page: () => MessageTemplatePage(
+        argument: Get.arguments as MessageTemplateArgument,
+      ),
     ),
     GetPage(
       name: RouteGenerator.messageHistory,
@@ -70,6 +74,10 @@ class RouteGenerator {
     GetPage(
       name: RouteGenerator.selectableContactList,
       page: () => const SelectableContactListPage(),
+    ),
+    GetPage(
+      name: RouteGenerator.settings,
+      page: () => const SettingsPage(),
     ),
   ];
 }

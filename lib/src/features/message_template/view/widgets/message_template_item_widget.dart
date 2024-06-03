@@ -11,80 +11,69 @@ import 'package:get/get.dart';
 
 class MessageTemplateItemWidget extends StatelessWidget {
   final MessageTemplateModel template;
+  final bool isSelectable;
 
   const MessageTemplateItemWidget({
     Key? key,
     required this.template,
+    required this.isSelectable,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final templateController = Get.find<MessageTemplateController>();
-    return Dismissible(
-      key: UniqueKey(),
-      direction: DismissDirection.horizontal,
-      background: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: (){
+        if(isSelectable){
+          Navigator.pop(context, template);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: kPrimaryColor,
+          color: kWhite,
           borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: kGreyLight,
+            width: 0.5,
+          ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SvgIconButton(
-              svgIconPath: AssetPath.editIcon,
-              color: kWhite,
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    template.title ?? '',
+                    maxLines: 1,
+                    textAlign: TextAlign.start,
+                    style: context.appTextTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                SvgIconButton(
+                  onTap: () => onEditTemplate(context),
+                  svgIconPath: AssetPath.editIcon,
+                ),
+                const SizedBox(width: 30),
+                SvgIconButton(
+                  onTap: () => onDeleteTemplate(context),
+                  svgIconPath: AssetPath.deleteIcon,
+                ),
+              ],
             ),
-            const SizedBox(width: 20),
-            SvgIconButton(
-              svgIconPath: AssetPath.deleteIcon,
-              color: kWhite,
+            const SizedBox(height: 8),
+            Text(
+              template.message ?? '',
+              textAlign: TextAlign.start,
+              style: context.appTextTheme.bodySmall,
             ),
           ],
         ),
       ),
-      confirmDismiss: (direction) async {
-        if (direction == DismissDirection.endToStart) {
-          onDeleteTemplate(context);
-        }
-        if (direction == DismissDirection.startToEnd) {
-          onEditTemplate(context);
-        }
-      },
-      child: Obx(() {
-        return RadioListTile<String>(
-          tileColor: kWhite,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-            side: BorderSide(
-              color: kGreyLight,
-              width: 0.5,
-            ),
-          ),
-          value: template.id!,
-          groupValue: templateController.selectedTemplateId.value,
-          onChanged: (value) {
-            if (value != null) {
-              templateController.updateSelectedTemplateId(template);
-            }
-          },
-          title: Text(
-            template.title ?? '',
-            maxLines: 1,
-            textAlign: TextAlign.start,
-            style: context.appTextTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          subtitle: Text(
-            template.message ?? '',
-            textAlign: TextAlign.start,
-            style: context.appTextTheme.bodySmall,
-          ),
-          controlAffinity: ListTileControlAffinity.trailing,
-        );
-      }),
     );
   }
 

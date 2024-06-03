@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MessageTemplateListWidget extends StatelessWidget {
-  const MessageTemplateListWidget({super.key});
+  final bool isSelectable;
+
+  const MessageTemplateListWidget({
+    super.key,
+    required this.isSelectable,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +21,21 @@ class MessageTemplateListWidget extends StatelessWidget {
           ? const KCustomLoader()
           : controller.templateList.isEmpty
               ? const FailureWidgetBuilder()
-              : _TemplateList(controller: controller),
+              : _TemplateList(
+                  controller: controller,
+                  isSelectable: isSelectable,
+                ),
     );
   }
 }
 
 class _TemplateList extends StatelessWidget {
   final MessageTemplateController controller;
+  final bool isSelectable;
 
   const _TemplateList({
     required this.controller,
+    required this.isSelectable,
   });
 
   @override
@@ -36,6 +46,7 @@ class _TemplateList extends StatelessWidget {
       itemCount: controller.templateList.length,
       itemBuilder: (context, index) => MessageTemplateItemWidget(
         template: controller.templateList[index],
+        isSelectable: isSelectable,
       ),
       separatorBuilder: (context, index) => const SizedBox(height: 8),
     );

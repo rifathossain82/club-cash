@@ -3,8 +3,21 @@ import 'package:club_cash/src/features/message_template/view/widgets/message_tem
 import 'package:club_cash/src/features/message_template/view/widgets/template_add_update_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
+class MessageTemplateArgument {
+  final bool isSelectable;
+
+  const MessageTemplateArgument({
+    required this.isSelectable,
+  });
+}
+
 class MessageTemplatePage extends StatelessWidget {
-  const MessageTemplatePage({super.key});
+  final MessageTemplateArgument argument;
+
+  const MessageTemplatePage({
+    super.key,
+    required this.argument,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +26,9 @@ class MessageTemplatePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Message Template"),
       ),
-      body: const MessageTemplateListWidget(),
+      body: MessageTemplateListWidget(
+        isSelectable: argument.isSelectable,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _onAddMessageTemplate(context),
         child: const Icon(Icons.add),
