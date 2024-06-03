@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:club_cash/src/core/enums/app_enum.dart';
+import 'package:club_cash/src/core/helpers/helper_methods.dart';
 import 'package:club_cash/src/core/helpers/logger.dart';
-import 'package:club_cash/src/core/services/local_storage.dart';
 import 'package:club_cash/src/core/services/permission_manager.dart';
 import 'package:club_cash/src/core/services/snack_bar_services.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/features/home/model/transaction_model.dart';
 import 'package:club_cash/src/features/member/controller/member_controller.dart';
-import 'package:club_cash/src/features/message_template/model/message_template_model.dart';
+import 'package:club_cash/src/features/settings/controller/settings_controller.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'package:get/get.dart';
 
@@ -37,16 +36,36 @@ class TransactionController extends GetxController {
     ]);
   }
 
-  Future<void> sendConfirmationSMS() async {
+  Future<void> _sendConfirmationSMS({required num transactionAmount}) async {
     final List<String> phoneNumbers =
         await Get.find<MemberController>().getMemberPhoneNumbers();
-    // final MessageTemplateModel messageTemplate = LocalStorage.getData(key: LocalStorageKey.messageTemplateId)
+    final settingsController = Get.find<SettingsController>();
 
+    if (settingsController.isEnableSendSMS) {
+      /// Generate message:
+      String message = generateMessage(
+        message: settingsController.selectedMessageTemplate?.message ?? '',
+        amount: transactionAmount,
+        netBalance: netBalance.value,
+      );
+
+      /// To Send SMS:
+      _send(
+        message: message,
+        phoneNumbers: phoneNumbers,
+      );
+    }
+  }
+
+  void _send({
+    required String message,
+    required List<String> phoneNumbers,
+  }) async {
     /// To send sms.
     try {
-      if(await PermissionManager.requestSmsPermission()) {
+      if (await PermissionManager.requestSmsPermission()) {
         await sendSMS(
-          message: 'Transaction Updated',
+          message: message,
           recipients: phoneNumbers,
           sendDirect: true,
         );
@@ -126,7 +145,8 @@ class TransactionController extends GetxController {
 
       await _collection.add(transaction.toJson());
       await reload();
-      // await sendConfirmationSMS();
+      await _sendConfirmationSMS(transactionAmount: transaction.amount ?? 0);
+
       SnackBarService.showSnackBar(
         message: "Transaction added successfully!",
         bgColor: successColor,
@@ -151,6 +171,7 @@ class TransactionController extends GetxController {
 
       await _collection.doc(transaction.id).update(transaction.toJson());
       reload();
+
       SnackBarService.showSnackBar(
         message: "Transaction updated successfully!",
         bgColor: successColor,

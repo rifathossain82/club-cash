@@ -23,16 +23,16 @@ void kPrint(dynamic data) {
 /// This method ensures that if there are two %d in the template,
 /// the first one replaced by amount and the last one replaced by netBalance.
 /// If there's only one %d in the template, it's replaced with amount.
-String generateMessageTemplate({
-  required String template,
-  required int amount,
-  required int netBalance,
+String generateMessage({
+  required String message,
+  required num amount,
+  required num netBalance,
 }) {
   const String placeholder = "%d";
-  int firstIndex = template.indexOf(placeholder);
-  int lastIndex = template.lastIndexOf(placeholder);
+  int firstIndex = message.indexOf(placeholder);
+  int lastIndex = message.lastIndexOf(placeholder);
 
-  String generatedMessage = template.replaceFirst(
+  String generatedMessage = message.replaceFirst(
     placeholder,
     amount.toString(),
   );
