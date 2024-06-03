@@ -1,4 +1,5 @@
 import 'package:club_cash/src/core/enums/app_enum.dart';
+import 'package:club_cash/src/core/helpers/debouncer.dart';
 import 'package:club_cash/src/core/routes/routes.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_box_shadow.dart';
@@ -12,12 +13,20 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MemberListPage extends StatefulWidget {
+class MemberListPageArgument {
   final bool isSelectable;
+
+  const MemberListPageArgument({
+    required this.isSelectable,
+  });
+}
+
+class MemberListPage extends StatefulWidget {
+  final MemberListPageArgument argument;
 
   const MemberListPage({
     Key? key,
-    this.isSelectable = false,
+    required this.argument,
   }) : super(key: key);
 
   @override
@@ -44,7 +53,9 @@ class _MemberPickerPageState extends State<MemberListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isSelectable ? 'Select Member' : 'Members'),
+        title: Text(
+          widget.argument.isSelectable ? 'Select Member' : 'Members',
+        ),
       ),
       bottomNavigationBar: _BottomNavigationBar(
         onAddFromContact: _onAddFromContact,
@@ -55,10 +66,13 @@ class _MemberPickerPageState extends State<MemberListPage> {
           KSearchField(
             controller: searchTextController,
             hintText: 'Search',
+            inputType: TextInputType.text,
+            inputAction: TextInputAction.search,
+            onChanged: onChangedSearchBox,
           ),
           Expanded(
             child: MemberListWidget(
-              isSelectable: widget.isSelectable,
+              isSelectable: widget.argument.isSelectable,
             ),
           ),
         ],
@@ -66,18 +80,22 @@ class _MemberPickerPageState extends State<MemberListPage> {
     );
   }
 
+  void onChangedSearchBox(dynamic value) {
+    Debouncer.run(() {
+      memberController.getMemberList(text: value);
+    });
+  }
+
   void _onAddFromContact() async {
     var result = await Get.toNamed(RouteGenerator.selectableContactList);
 
     if (result is Contact) {
       await memberAddUpdateBottomSheet(
-        context: context,
-        formStatus: FormStatus.add,
-        existingMember: MemberModel(
-          name: "${result.displayName}",
-          phone: "${result.phones?.first.value}"
-        )
-      );
+          context: context,
+          formStatus: FormStatus.add,
+          existingMember: MemberModel(
+              name: "${result.displayName}",
+              phone: "${result.phones?.first.value}"));
     }
   }
 

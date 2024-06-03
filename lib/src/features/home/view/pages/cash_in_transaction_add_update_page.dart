@@ -12,6 +12,7 @@ import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.
 import 'package:club_cash/src/features/home/controller/transaction_controller.dart';
 import 'package:club_cash/src/features/home/model/transaction_model.dart';
 import 'package:club_cash/src/features/member/model/member_model.dart';
+import 'package:club_cash/src/features/member/view/pages/member_list_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -198,7 +199,9 @@ class _TransactionAddUpdatePageState
   void _onTapMemberField() async {
     var result = await Get.toNamed(
       RouteGenerator.memberListPage,
-      arguments: true,
+      arguments: const MemberListPageArgument(
+        isSelectable: true,
+      ),
     );
 
     if (result is MemberModel) {

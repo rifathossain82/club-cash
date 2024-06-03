@@ -1,6 +1,7 @@
 enum LocalStorageKey {
   userId,
-  messageTemplateId,
+  isEnableSendSMS,
+  messageTemplate,
 }
 
 enum Status {

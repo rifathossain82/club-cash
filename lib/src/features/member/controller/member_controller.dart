@@ -14,22 +14,30 @@ class MemberController extends GetxController {
 
   final _memberCollection = FirebaseFirestore.instance.collection('members');
 
-  Future<void> getMemberList() async {
+  Future<void> getMemberList({String? text}) async {
     try {
       isLoadingMemberList(true);
-      memberList.value = [];
+      memberList.clear();
 
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _memberCollection.orderBy('timestamp', descending: false).get();
+      Query<Map<String, dynamic>> query = _memberCollection;
 
-      if (querySnapshot.docs.isEmpty) {
-        String msg = 'No Members Found!';
-        throw msg;
+      if (text != null && text.isNotEmpty) {
+        query = query.where(
+          "nameSubstrings",
+          arrayContains: text.toLowerCase(),
+        );
       } else {
-        memberList.value = querySnapshot.docs
-            .map((doc) => MemberModel.fromJson(doc.id, doc.data()))
-            .toList();
+        query = _memberCollection.orderBy(
+          'timestamp',
+          descending: false,
+        );
       }
+
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+
+      memberList.value = querySnapshot.docs
+          .map((doc) => MemberModel.fromJson(doc.id, doc.data()))
+          .toList();
     } catch (e, stackTrace) {
       Log.error('$e', stackTrace: stackTrace);
 

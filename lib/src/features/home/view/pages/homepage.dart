@@ -12,6 +12,8 @@ import 'package:club_cash/src/features/auth/controller/auth_controller.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_update_page.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_out_transaction_add_update_page.dart';
 import 'package:club_cash/src/features/home/view/widgets/homepage_body.dart';
+import 'package:club_cash/src/features/member/view/pages/member_list_page.dart';
+import 'package:club_cash/src/features/message_template/view/pages/message_template_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,6 +39,12 @@ class Homepage extends StatelessWidget {
     return AppBar(
       title: const Text(AppConstants.appName),
       actions: [
+        IconButton(
+          onPressed: _onPressedSettings,
+          icon: const Icon(
+            Icons.settings_outlined,
+          ),
+        ),
         PopupMenuButton(
           color: kWhite,
           onSelected: (value) {
@@ -85,16 +93,27 @@ class Homepage extends StatelessWidget {
     );
   }
 
+  void _onPressedSettings() {
+    Get.toNamed(
+      RouteGenerator.settings,
+    );
+  }
+
   void _onPressedMember() {
     Get.toNamed(
       RouteGenerator.memberListPage,
-      arguments: false,
+      arguments: const MemberListPageArgument(
+        isSelectable: false,
+      ),
     );
   }
 
   void _onPressedMessageTemplate() {
     Get.toNamed(
       RouteGenerator.messageTemplate,
+      arguments: const MessageTemplateArgument(
+        isSelectable: false,
+      ),
     );
   }
 
