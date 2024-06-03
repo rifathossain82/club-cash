@@ -24,9 +24,25 @@ class MemberModel {
 
   Map<String, dynamic> toJson() {
     return {
+      // To perform search we need to store nameSubstrings,
+      // but it's not needed in model, so we ignore it.
+      'nameSubstrings': generateSubstrings(name ?? ''),
       'name': name,
       'phone': phone,
       'timestamp': timestamp != null ? Timestamp.fromDate(timestamp!) : null,
     };
+  }
+
+
+  List<String> generateSubstrings(String name) {
+    List<String> substrings = [];
+    name = name.toLowerCase();
+
+    for (int i = 0; i < name.length; i++) {
+      for (int j = i + 1; j <= name.length; j++) {
+        substrings.add(name.substring(i, j));
+      }
+    }
+    return substrings;
   }
 }

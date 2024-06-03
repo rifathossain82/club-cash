@@ -1,4 +1,5 @@
 import 'package:club_cash/src/core/enums/app_enum.dart';
+import 'package:club_cash/src/core/helpers/debouncer.dart';
 import 'package:club_cash/src/core/routes/routes.dart';
 import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_box_shadow.dart';
@@ -65,6 +66,9 @@ class _MemberPickerPageState extends State<MemberListPage> {
           KSearchField(
             controller: searchTextController,
             hintText: 'Search',
+            inputType: TextInputType.text,
+            inputAction: TextInputAction.search,
+            onChanged: onChangedSearchBox,
           ),
           Expanded(
             child: MemberListWidget(
@@ -74,6 +78,12 @@ class _MemberPickerPageState extends State<MemberListPage> {
         ],
       ),
     );
+  }
+
+  void onChangedSearchBox(dynamic value) {
+    Debouncer.run(() {
+      memberController.getMemberList(text: value);
+    });
   }
 
   void _onAddFromContact() async {
