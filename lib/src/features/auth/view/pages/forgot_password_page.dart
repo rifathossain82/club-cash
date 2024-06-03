@@ -1,15 +1,12 @@
 import 'package:club_cash/src/core/extensions/build_context_extension.dart';
 import 'package:club_cash/src/core/helpers/validators.dart';
-import 'package:club_cash/src/core/theme/app_theme.dart';
-import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/core/widgets/k_button.dart';
 import 'package:club_cash/src/core/widgets/k_button_progress_indicator.dart';
+import 'package:club_cash/src/core/widgets/k_custom_loader.dart';
 import 'package:club_cash/src/core/widgets/k_logo.dart';
 import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.dart';
 import 'package:club_cash/src/features/auth/controller/auth_controller.dart';
-import 'package:club_cash/src/features/auth/view/widgets/create_account_button.dart';
-import 'package:club_cash/src/features/auth/view/widgets/forgot_password_button.dart';
-import 'package:club_cash/src/features/auth/view/widgets/or_text.dart';
+import 'package:club_cash/src/features/auth/view/widgets/custom_back_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,124 +17,108 @@ class ForgotPasswordPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 15,
-              vertical: context.screenHeight * 0.05,
+        child: Stack(
+          children: const [
+            _ForgotPasswordForm(),
+            Positioned(
+              top: 15,
+              left: 15,
+              child: CustomBackButton(),
             ),
-            child: const _LoginForm(),
-          ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _LoginForm extends StatefulWidget {
-  const _LoginForm({Key? key}) : super(key: key);
+class _ForgotPasswordForm extends StatefulWidget {
+  const _ForgotPasswordForm({Key? key}) : super(key: key);
 
   @override
-  _LoginFormState createState() => _LoginFormState();
+  _ForgotPasswordFormState createState() => _ForgotPasswordFormState();
 }
 
-class _LoginFormState extends State<_LoginForm> {
-  late final TextEditingController _usernameTextController;
-  late final TextEditingController _passwordTextController;
-  final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
-  bool _isPasswordVisible = true;
+class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
+  late final TextEditingController _phoneTextController;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final authController = Get.find<AuthController>();
 
   @override
   void initState() {
     super.initState();
-    AppTheme.setDarkStatusBar();
-    _usernameTextController = TextEditingController();
-    _passwordTextController = TextEditingController();
+    _phoneTextController = TextEditingController();
+    authController.getUserPhoneNumber().then((value){
+      _phoneTextController.text = authController.phoneNumber.value.toString();
+    });
   }
 
   @override
   void dispose() {
-    _usernameTextController.dispose();
-    _passwordTextController.dispose();
+    _phoneTextController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _loginFormKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const KLogo(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Text(
-              'Welcome Back!\nLog in to access your account and enjoy all the benefits of being a member.',
-              textAlign: TextAlign.center,
-              style: context.appTextTheme.bodySmall,
-            ),
-          ),
-          const SizedBox(height: 20),
-          KTextFormFieldBuilderWithTitle(
-            controller: _usernameTextController,
-            title: 'Username',
-            hintText: 'Enter username',
-            validator: Validators.emptyValidator,
-            inputType: TextInputType.name,
-            inputAction: TextInputAction.next,
-            prefixIconData: Icons.person_outline,
-          ),
-          KTextFormFieldBuilderWithTitle(
-            controller: _passwordTextController,
-            title: 'Password',
-            hintText: 'Enter password',
-            validator: Validators.passwordValidator,
-            inputType: TextInputType.visiblePassword,
-            inputAction: TextInputAction.next,
-            prefixIconData: Icons.lock_outline,
-            bottomPadding: 0,
-            obscureText: _isPasswordVisible,
-            suffixIcon: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isPasswordVisible = !_isPasswordVisible;
-                });
-              },
-              child: Icon(
-                _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                color: kBlackLight,
+    return Obx(() {
+      return authController.isLoadingUserPhoneNumber.value
+          ? const KCustomLoader()
+          : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: context.screenHeight * 0.05,
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const KLogo(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Text(
+                          'Forgot Your Password?\nNo worries! Verify your phone number with an OTP to reset your password and regain access to your account.',
+                          textAlign: TextAlign.center,
+                          style: context.appTextTheme.bodySmall,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      KTextFormFieldBuilderWithTitle(
+                        controller: _phoneTextController,
+                        title: 'Phone Number',
+                        hintText: '+880 1*********',
+                        validator: Validators.phoneNumberValidator,
+                        inputType: TextInputType.phone,
+                        inputAction: TextInputAction.done,
+                        prefixIconData: Icons.phone,
+                        readOnly: true,
+                      ),
+                      const SizedBox(height: 15),
+                      KButton(
+                        onPressed: _onVerifyPhoneNumber,
+                        borderRadius: 4,
+                        child: authController.isVerificationLoading.value
+                            ? const KButtonProgressIndicator()
+                            : Text(
+                                'verify'.toUpperCase(),
+                                style: context.buttonTextStyle,
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-          const ForgotPasswordButton(),
-          const SizedBox(height: 15),
-          KButton(
-            onPressed: _onLogin,
-            borderRadius: 4,
-            child: Obx(() {
-              return authController.isLoginLoading.value
-                  ? const KButtonProgressIndicator()
-                  : Text(
-                      'Login'.toUpperCase(),
-                      style: context.buttonTextStyle,
-                    );
-            }),
-          ),
-          // const OrText(),
-          // const CreateAccountButton(),
-        ],
-      ),
-    );
+            );
+    });
   }
 
-  void _onLogin() {
-    if (_loginFormKey.currentState!.validate()) {
-      authController.login(
-        username: _usernameTextController.text.trim(),
-        password: _passwordTextController.text.trim(),
+  void _onVerifyPhoneNumber() {
+    if (_formKey.currentState!.validate()) {
+      authController.verifyPhoneNumber(
+        phoneNumber: _phoneTextController.text.trim(),
       );
     }
   }

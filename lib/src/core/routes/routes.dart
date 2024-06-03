@@ -1,4 +1,6 @@
+import 'package:club_cash/src/features/auth/view/pages/forgot_password_page.dart';
 import 'package:club_cash/src/features/auth/view/pages/login_page.dart';
+import 'package:club_cash/src/features/auth/view/pages/otp_verification_page.dart';
 import 'package:club_cash/src/features/auth/view/pages/register_page.dart';
 import 'package:club_cash/src/features/contact/view/pages/selectable_contact_list_page.dart';
 import 'package:club_cash/src/features/home/view/pages/cash_in_transaction_add_update_page.dart';
@@ -14,6 +16,8 @@ import 'package:get/get.dart';
 class RouteGenerator {
   static const String splash = '/';
   static const String login = '/login';
+  static const String forgotPassword = '/forgot-password';
+  static const String otpVerification = '/otp-verification';
   static const String register = '/register';
   static const String home = '/home';
   static const String cashInTransactionAddUpdate =
@@ -34,6 +38,14 @@ class RouteGenerator {
     GetPage(
       name: RouteGenerator.login,
       page: () => const LoginPage(),
+    ),
+    GetPage(
+      name: RouteGenerator.forgotPassword,
+      page: () => const ForgotPasswordPage(),
+    ),
+    GetPage(
+      name: RouteGenerator.otpVerification,
+      page: () => VerifyOTPPage(phone: Get.arguments as String),
     ),
     GetPage(
       name: RouteGenerator.register,

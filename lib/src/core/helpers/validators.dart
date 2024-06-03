@@ -1,4 +1,3 @@
-
 import 'package:club_cash/src/core/errors/messages.dart';
 import 'package:club_cash/src/core/extensions/string_extension.dart';
 
@@ -36,8 +35,6 @@ class Validators {
   static String? phoneNumberValidator(value) {
     if (value.toString().isEmpty) {
       return Message.emptyPhone;
-    } else if (!value.toString().isValidPhone) {
-      return Message.invalidPhone;
     }
     return null;
   }

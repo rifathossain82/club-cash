@@ -5,14 +5,43 @@ import 'package:club_cash/src/core/routes/routes.dart';
 import 'package:club_cash/src/core/services/local_storage.dart';
 import 'package:club_cash/src/core/services/snack_bar_services.dart';
 import 'package:club_cash/src/core/utils/color.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
+  var isLoadingUserPhoneNumber = false.obs;
+  var isResetPasswordLoading = false.obs;
   var isLoginLoading = false.obs;
-  var isVerifyOTPLoading = false.obs;
   var isLogoutLoading = false.obs;
+  var isVerificationLoading = false.obs;
+  var verificationId = Rxn<String>();
+  var phoneNumber = Rxn<String>();
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final _collection = FirebaseFirestore.instance.collection('users');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> getUserPhoneNumber() async {
+    try {
+      isLoadingUserPhoneNumber(true);
+
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await _collection
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        phoneNumber.value = querySnapshot.docs.first.data()['phone'];
+      }
+    } catch (e, stackTrace) {
+      Log.error('$e', stackTrace: stackTrace);
+
+      SnackBarService.showSnackBar(
+        message: e.toString(),
+        bgColor: failedColor,
+      );
+    } finally {
+      isLoadingUserPhoneNumber(false);
+    }
+  }
 
   Future<void> login({
     required String username,
@@ -22,8 +51,7 @@ class AuthController extends GetxController {
       isLoginLoading(true);
 
       // Check if a user with the provided username exists
-      QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
-          .collection('users')
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await _collection
           .where('username', isEqualTo: username)
           .where("password", isEqualTo: password)
           .limit(1)
@@ -57,7 +85,7 @@ class AuthController extends GetxController {
     }
   }
 
-  Future logout() async {
+  Future<void> logout() async {
     try {
       isLogoutLoading(true);
 
@@ -80,6 +108,109 @@ class AuthController extends GetxController {
       );
     } finally {
       isLogoutLoading(false);
+    }
+  }
+
+  Future<void> verifyPhoneNumber({required String phoneNumber}) async {
+    try {
+      isVerificationLoading(true);
+
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await _auth.signInWithCredential(credential);
+          SnackBarService.showSnackBar(
+            message: "Phone number automatically verified and user signed in!",
+            bgColor: successColor,
+          );
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          Log.error('Verification failed: ${e.message}');
+          SnackBarService.showSnackBar(
+            message: "Verification failed. Please try again.",
+            bgColor: failedColor,
+          );
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          this.verificationId.value = verificationId;
+          SnackBarService.showSnackBar(
+            message: "OTP sent to your phone number.",
+            bgColor: successColor,
+          );
+          Get.toNamed(
+            RouteGenerator.otpVerification,
+            arguments: phoneNumber,
+          );
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          this.verificationId.value = verificationId;
+          Log.warning(
+            "Code auto-retrieval timeout for verificationId: $verificationId",
+          );
+        },
+      );
+    } catch (e, stackTrace) {
+      Log.error("Error during phone verification: $e", stackTrace: stackTrace);
+      SnackBarService.showSnackBar(
+        message: "An error occurred. Please try again.",
+        bgColor: failedColor,
+      );
+    } finally {
+      isVerificationLoading(false);
+    }
+  }
+
+  Future<void> signInWithOTP({required String otp}) async {
+    try {
+      isVerificationLoading(true);
+
+      final PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId.value!,
+        smsCode: otp,
+      );
+
+      await _auth.signInWithCredential(credential);
+
+      SnackBarService.showSnackBar(
+        message: "Phone number verified successfully!",
+        bgColor: successColor,
+      );
+
+      /// Navigate to the reset password screen
+    } catch (e, stackTrace) {
+      Log.error("Failed to sign in with OTP: $e", stackTrace: stackTrace);
+      SnackBarService.showSnackBar(
+        message: "Failed to verify OTP. Please try again.",
+        bgColor: failedColor,
+      );
+    } finally {
+      isVerificationLoading(false);
+    }
+  }
+
+  Future<void> resetPassword({
+    required String newPassword,
+  }) async {
+    try {
+      isResetPasswordLoading(true);
+
+      String userId = LocalStorage.getData(key: LocalStorageKey.userId);
+
+      await _collection.doc(userId).update({'password': newPassword});
+
+      SnackBarService.showSnackBar(
+        message: 'Password reset successfully!',
+        bgColor: successColor,
+      );
+    } catch (e, stackTrace) {
+      Log.error('$e', stackTrace: stackTrace);
+
+      SnackBarService.showSnackBar(
+        message: 'Failed to reset password. Please try again.',
+        bgColor: failedColor,
+      );
+    } finally{
+      isResetPasswordLoading(false);
     }
   }
 }
