@@ -251,7 +251,7 @@ class _BottomNavigationBar extends StatelessWidget {
           onPressed: onSave,
           iconData: Icons.check,
           title: "save".toUpperCase(),
-          bgColor: kGreen,
+          bgColor: kRed,
           isLoading: transactionController.isAddingTransaction.value ||
               transactionController.isUpdatingTransaction.value,
         );
