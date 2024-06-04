@@ -1,16 +1,90 @@
-# club_cash
+# Club Cash - Flutter Project
 
-Simple and straightforward, focusing on the financial aspect of club.
+## Overview
+Club Cash is a Flutter-based mobile application designed to manage club cash transactions. The backend of the application is powered by Firebase. Users can add members directly from their phone contacts, and after every transaction, each user receives a confirmation message displaying the transaction amount and the current net balance.
+
+<br>
+
+## Features  
+- Add Members: Easily add new members from your phone contacts and customize them.
+- Transaction: Manage Cash In and Cash Out transactions.
+- Message Template: Customize and manage message templates for transaction notifications.
+- Message History: View the history of all sent transaction messages.
+- User Authentication:
+    - Login: Secure login for user.
+    - Logout: Secure logout to ensure account safety.
+    - Change Password: Option to change the password for better security.
+    - Forgot Password: Reset password functionality to help user regain access to his/her account.
+- Settings: Customize app settings as per user preferences.
+
+<br>
+
+## Project Structure
+
+```css
+club_cash/
+├── assets/
+│   ├── images/
+│   └── icons/
+├── lib/
+│   ├── src/
+│   │   ├── core/
+│   │   └── features/
+│   └── main.dart
+├── test/
+│   ├── widget_tests/
+│   ├── unit_tests/
+│   └── integration_tests/
+├── web/
+├── desktop/
+│   ├── windows/
+│   ├── macos/
+│   └── linux/
+├── pubspec.yaml
+└── README.md
+```
+
+<br>  
 
 ## Getting Started
+To get a local copy up and running follow these simple steps.
 
-This project is a starting point for a Flutter application.
+### Prerequisites
+Ensure you have the following installed:
+- Flutter SDK 3.3.9
+- Dart SDK 2.18.5
 
-A few resources to get you started if this is your first Flutter project:
+### Installation
+1. **Clone the repository:**
+   ```dart
+   git clone https://github.com/rifathossain82/club-cash.git
+   cd club-cash
+   ``` 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+2. **Install dependencies:**
+   ```dart
+   flutter pub get
+   ```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. **Run the application :**
+    ```dart
+    flutter run
+    ```
+
+<br>
+
+### Contributing
+Contributions are not allowed due to company restrictions.
+
+<br>
+
+### License
+Distributed under the MIT License. See **LICENSE** for more information.
+
+<br>
+
+### Contact
+Your Name - appdev.rifathossain@gmail.com  
+Project Link: https://github.com/rifathossain82/club-cash.git
+
+***Note:*** You can copy and paste this directly into your `README.md` file.
