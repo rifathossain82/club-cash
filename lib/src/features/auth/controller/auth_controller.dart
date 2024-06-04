@@ -5,17 +5,19 @@ import 'package:club_cash/src/core/routes/routes.dart';
 import 'package:club_cash/src/core/services/local_storage.dart';
 import 'package:club_cash/src/core/services/snack_bar_services.dart';
 import 'package:club_cash/src/core/utils/color.dart';
+import 'package:club_cash/src/features/auth/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
   var isLoadingUserPhoneNumber = false.obs;
   var isResetPasswordLoading = false.obs;
+  var isChangePasswordLoading = false.obs;
   var isLoginLoading = false.obs;
   var isLogoutLoading = false.obs;
   var isVerificationLoading = false.obs;
   var verificationId = Rxn<String>();
-  var phoneNumber = Rxn<String>();
+  var user = Rxn<UserModel>();
 
   final _collection = FirebaseFirestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,13 +25,16 @@ class AuthController extends GetxController {
   Future<void> getUserPhoneNumber() async {
     try {
       isLoadingUserPhoneNumber(true);
+      user.value = null;
 
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await _collection
           .limit(1)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        phoneNumber.value = querySnapshot.docs.first.data()['phone'];
+        Map<String, dynamic> userJson = querySnapshot.docs.first.data();
+        String userId = querySnapshot.docs.first.id;
+        user.value = UserModel.fromJson(userId, userJson);
       }
     } catch (e, stackTrace) {
       Log.error('$e', stackTrace: stackTrace);
@@ -50,14 +55,14 @@ class AuthController extends GetxController {
     try {
       isLoginLoading(true);
 
-      // Check if a user with the provided username exists
+      /// Check if a user with the provided username exists
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await _collection
           .where('username', isEqualTo: username)
           .where("password", isEqualTo: password)
           .limit(1)
           .get();
 
-      // If no user found with the provided username, return false
+      /// If no user found with the provided username, return false
       if (querySnapshot.docs.isEmpty) {
         String msg = 'Log in Failed!';
         throw msg;
@@ -67,7 +72,6 @@ class AuthController extends GetxController {
 
         Get.offAllNamed(RouteGenerator.home);
 
-        /// show success message
         SnackBarService.showSnackBar(
           message: "Logged in successfully!",
           bgColor: successColor,
@@ -123,6 +127,8 @@ class AuthController extends GetxController {
             message: "Phone number automatically verified and user signed in!",
             bgColor: successColor,
           );
+
+          isVerificationLoading(false);
         },
         verificationFailed: (FirebaseAuthException e) {
           Log.error('Verification failed: ${e.message}');
@@ -130,6 +136,7 @@ class AuthController extends GetxController {
             message: "Verification failed. Please try again.",
             bgColor: failedColor,
           );
+          isVerificationLoading(false);
         },
         codeSent: (String verificationId, int? resendToken) {
           this.verificationId.value = verificationId;
@@ -141,6 +148,8 @@ class AuthController extends GetxController {
             RouteGenerator.otpVerification,
             arguments: phoneNumber,
           );
+
+          isVerificationLoading(false);
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           this.verificationId.value = verificationId;
@@ -155,7 +164,7 @@ class AuthController extends GetxController {
         message: "An error occurred. Please try again.",
         bgColor: failedColor,
       );
-    } finally {
+
       isVerificationLoading(false);
     }
   }
@@ -176,7 +185,7 @@ class AuthController extends GetxController {
         bgColor: successColor,
       );
 
-      /// Navigate to the reset password screen
+      Get.toNamed(RouteGenerator.resetPassword);
     } catch (e, stackTrace) {
       Log.error("Failed to sign in with OTP: $e", stackTrace: stackTrace);
       SnackBarService.showSnackBar(
@@ -194,14 +203,15 @@ class AuthController extends GetxController {
     try {
       isResetPasswordLoading(true);
 
-      String userId = LocalStorage.getData(key: LocalStorageKey.userId);
-
-      await _collection.doc(userId).update({'password': newPassword});
+      /// Since user fetch before password reset, so we have user id.
+      await _collection.doc(user.value?.id).update({'password': newPassword});
 
       SnackBarService.showSnackBar(
         message: 'Password reset successfully!',
         bgColor: successColor,
       );
+
+      Get.offAllNamed(RouteGenerator.login);
     } catch (e, stackTrace) {
       Log.error('$e', stackTrace: stackTrace);
 
@@ -211,6 +221,44 @@ class AuthController extends GetxController {
       );
     } finally{
       isResetPasswordLoading(false);
+    }
+  }
+
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      isChangePasswordLoading(true);
+
+      /// Since, user change his password from settings,
+      /// so he/she has id in local (since we store it after login)
+      String userId = LocalStorage.getData(key: LocalStorageKey.userId);
+
+      DocumentSnapshot<Map<String, dynamic>> userDoc = await _collection.doc(userId).get();
+
+      /// Check if the old password matches
+      if (userDoc.exists && userDoc.data()!['password'] == oldPassword) {
+        await _collection.doc(userId).update({'password': newPassword});
+
+        SnackBarService.showSnackBar(
+          message: 'Password changed successfully!',
+          bgColor: successColor,
+        );
+
+        Get.offAllNamed(RouteGenerator.login);
+      } else {
+        throw 'Old password does not match.';
+      }
+    } catch (e, stackTrace) {
+      Log.error('$e', stackTrace: stackTrace);
+
+      SnackBarService.showSnackBar(
+        message: e.toString(),
+        bgColor: failedColor,
+      );
+    } finally {
+      isChangePasswordLoading(false);
     }
   }
 }

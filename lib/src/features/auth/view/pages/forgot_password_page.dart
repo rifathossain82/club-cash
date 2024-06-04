@@ -49,7 +49,7 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
     super.initState();
     _phoneTextController = TextEditingController();
     authController.getUserPhoneNumber().then((value){
-      _phoneTextController.text = authController.phoneNumber.value.toString();
+      _phoneTextController.text = authController.user.value?.phone ?? '';
     });
   }
 

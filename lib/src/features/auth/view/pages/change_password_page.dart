@@ -7,56 +7,51 @@ import 'package:club_cash/src/core/widgets/k_button_progress_indicator.dart';
 import 'package:club_cash/src/core/widgets/k_logo.dart';
 import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.dart';
 import 'package:club_cash/src/features/auth/controller/auth_controller.dart';
-import 'package:club_cash/src/features/auth/view/widgets/custom_back_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ResetPasswordPage extends StatelessWidget {
-  const ResetPasswordPage({Key? key}) : super(key: key);
+class ChangePasswordPage extends StatelessWidget {
+  const ChangePasswordPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: const [
-            _ResetPasswordForm(),
-            Positioned(
-              top: 15,
-              left: 15,
-              child: CustomBackButton(),
-            ),
-          ],
-        ),
+      appBar: AppBar(
+        title: const Text("Change Password"),
       ),
+      body: const _ChangePasswordForm(),
     );
   }
 }
 
-class _ResetPasswordForm extends StatefulWidget {
-  const _ResetPasswordForm({Key? key}) : super(key: key);
+class _ChangePasswordForm extends StatefulWidget {
+  const _ChangePasswordForm({Key? key}) : super(key: key);
 
   @override
-  _ResetPasswordFormState createState() => _ResetPasswordFormState();
+  _ChangePasswordFormState createState() => _ChangePasswordFormState();
 }
 
-class _ResetPasswordFormState extends State<_ResetPasswordForm> {
+class _ChangePasswordFormState extends State<_ChangePasswordForm> {
   final authController = Get.find<AuthController>();
+  late final TextEditingController _oldPasswordController;
   late final TextEditingController _newPasswordController;
   late final TextEditingController _confirmPasswordController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isOldPasswordVisible = true;
   bool _isNewPasswordVisible = true;
   bool _isConfirmPasswordVisible = true;
 
   @override
   void initState() {
     super.initState();
+    _oldPasswordController = TextEditingController();
     _newPasswordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
   }
 
   @override
   void dispose() {
+    _oldPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -69,7 +64,7 @@ class _ResetPasswordFormState extends State<_ResetPasswordForm> {
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 15,
-          vertical: context.screenHeight * 0.05,
+          vertical: context.screenHeight * 0.03,
         ),
         child: Form(
           key: _formKey,
@@ -80,12 +75,17 @@ class _ResetPasswordFormState extends State<_ResetPasswordForm> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Text(
-                  'Reset Your Password\nTo reset your password, simply enter a new password and confirm it.',
+                  'Update your account password to keep your information secure.',
                   textAlign: TextAlign.center,
                   style: context.appTextTheme.bodySmall,
                 ),
               ),
               const SizedBox(height: 20),
+              _buildPasswordField(
+                controller: _oldPasswordController,
+                title: 'Old Password',
+                visible: _isOldPasswordVisible,
+              ),
               _buildPasswordField(
                 controller: _newPasswordController,
                 title: 'New Password',
@@ -99,12 +99,12 @@ class _ResetPasswordFormState extends State<_ResetPasswordForm> {
               const SizedBox(height: 10),
               Obx(() {
                 return KButton(
-                  onPressed: _onResetPassword,
+                  onPressed: _onChangePassword,
                   borderRadius: 4,
-                  child: authController.isResetPasswordLoading.value
+                  child: authController.isChangePasswordLoading.value
                       ? const KButtonProgressIndicator()
                       : Text(
-                          'Reset'.toUpperCase(),
+                          'Change'.toUpperCase(),
                           style: context.buttonTextStyle,
                         ),
                 );
@@ -142,7 +142,9 @@ class _ResetPasswordFormState extends State<_ResetPasswordForm> {
       suffixIcon: GestureDetector(
         onTap: () {
           setState(() {
-            if (controller == _newPasswordController) {
+            if (controller == _oldPasswordController) {
+              _isOldPasswordVisible = !_isOldPasswordVisible;
+            } else if (controller == _newPasswordController) {
               _isNewPasswordVisible = !_isNewPasswordVisible;
             } else {
               _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
@@ -170,9 +172,10 @@ class _ResetPasswordFormState extends State<_ResetPasswordForm> {
     };
   }
 
-  void _onResetPassword() {
+  void _onChangePassword() {
     if (_formKey.currentState!.validate()) {
-      authController.resetPassword(
+      authController.changePassword(
+        oldPassword: _oldPasswordController.text.trim(),
         newPassword: _newPasswordController.text.trim(),
       );
     }

@@ -24,6 +24,7 @@ class SettingsPage extends StatelessWidget {
           children: const [
             _SendSMSOption(),
             _MessageTemplate(),
+            _ChangePasswordOption(),
           ],
         ),
       ),
@@ -51,8 +52,11 @@ class _SendSMSOption extends StatelessWidget {
           bottom: 15,
         ),
         dense: true,
-        subtitle: const Text(
+        subtitle: Text(
           "SMS Send for every transactions.",
+          style: context.appTextTheme.bodySmall?.copyWith(
+            fontSize: 11,
+          ),
         ),
       );
     });
@@ -87,8 +91,11 @@ class _MessageTemplate extends StatelessWidget {
           if (settingsController.selectedMessageTemplate != null)
             Text(
               " Message : ${settingsController.selectedMessageTemplate?.message ?? ''}",
-              style: context.appTextTheme.bodySmall,
+              style: context.appTextTheme.bodySmall?.copyWith(
+                fontSize: 11,
+              ),
             ),
+          const SizedBox(height: 15),
         ],
       );
     });
@@ -105,5 +112,40 @@ class _MessageTemplate extends StatelessWidget {
     if (result is MessageTemplateModel) {
       controller.changeMessageTemplate(result);
     }
+  }
+}
+
+class _ChangePasswordOption extends StatelessWidget {
+  const _ChangePasswordOption();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: _onTapChangePassword,
+      title: Text(
+        'Change Password',
+        style: context.appTextTheme.bodySmall?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      contentPadding: const EdgeInsets.only(
+        bottom: 15,
+      ),
+      dense: true,
+      subtitle: Text(
+        "Update your account password to keep your information secure.",
+        style: context.appTextTheme.bodySmall?.copyWith(
+          fontSize: 11,
+        ),
+      ),
+      trailing: const Icon(
+        Icons.arrow_forward_ios_rounded,
+        size: 20,
+      ),
+    );
+  }
+
+  void _onTapChangePassword(){
+    Get.toNamed(RouteGenerator.changePassword);
   }
 }

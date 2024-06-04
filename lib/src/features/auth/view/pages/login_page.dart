@@ -7,9 +7,7 @@ import 'package:club_cash/src/core/widgets/k_button_progress_indicator.dart';
 import 'package:club_cash/src/core/widgets/k_logo.dart';
 import 'package:club_cash/src/core/widgets/k_text_form_field_builder_with_title.dart';
 import 'package:club_cash/src/features/auth/controller/auth_controller.dart';
-import 'package:club_cash/src/features/auth/view/widgets/create_account_button.dart';
 import 'package:club_cash/src/features/auth/view/widgets/forgot_password_button.dart';
-import 'package:club_cash/src/features/auth/view/widgets/or_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -59,6 +57,7 @@ class _LoginFormState extends State<_LoginForm> {
 
   @override
   void dispose() {
+    AppTheme.enableInitialThemeSetting();
     _usernameTextController.dispose();
     _passwordTextController.dispose();
     super.dispose();
@@ -112,8 +111,8 @@ class _LoginFormState extends State<_LoginForm> {
               ),
             ),
           ),
-          // const ForgotPasswordButton(),
-          const SizedBox(height: 25),
+          const ForgotPasswordButton(),
+          const SizedBox(height: 15),
           KButton(
             onPressed: _onLogin,
             borderRadius: 4,
@@ -126,8 +125,6 @@ class _LoginFormState extends State<_LoginForm> {
                     );
             }),
           ),
-          // const OrText(),
-          // const CreateAccountButton(),
         ],
       ),
     );
