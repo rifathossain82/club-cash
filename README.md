@@ -106,7 +106,5 @@ Distributed under the MIT License. See **LICENSE** for more information.
 <br>
 
 ### Contact
-Your Name - appdev.rifathossain@gmail.com  
-Project Link: https://github.com/rifathossain82/club-cash.git
-
-***Note:*** You can copy and paste this directly into your `README.md` file.
+Name: Rifat Hossain  
+E-mail: appdev.rifathossain@gmail.com    
