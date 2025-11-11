@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.clubcash.app">
+    package="com.fin.track">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -19,7 +19,7 @@
     </queries>
 
    <application
-        android:label="Club Cash"
+        android:label="FinTrack"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

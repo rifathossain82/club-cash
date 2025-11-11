@@ -1,4 +1,4 @@
-package com.clubcash.app;
+package com.fin.track;
 
 import io.flutter.embedding.android.FlutterActivity;
 

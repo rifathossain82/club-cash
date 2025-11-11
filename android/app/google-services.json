@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "523535035268",
-    "project_id": "club-cash",
-    "storage_bucket": "club-cash.appspot.com"
+    "project_number": "829441885219",
+    "project_id": "fin-track-804a6",
+    "storage_bucket": "fin-track-804a6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:523535035268:android:caf6787105f22c5b328bd1",
+        "mobilesdk_app_id": "1:829441885219:android:4353bdb6492bc82290dd96",
         "android_client_info": {
-          "package_name": "com.clubcash.app"
+          "package_name": "com.fin.track"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDQ3Ag1AHMoVjr5v6BWcVo78qAm8r3kj-o"
+          "current_key": "AIzaSyCrN99N2LocMaUqbFWMlkcWRsCbAF7n1d0"
         }
       ],
       "services": {

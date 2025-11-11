@@ -9,43 +9,41 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  google_fonts: ^3.0.1
-  http: ^0.13.5
-  connectivity_plus: ^3.0.2
-  cached_network_image: ^3.2.3
-  image_picker: ^0.8.6+1
-  path_provider: ^2.0.11
-  intl: ^0.18.0
-  shimmer: ^2.0.0
-  flutter_svg:
-  url_launcher: any
-  logger: ^2.0.2+1
-  lottie: ^2.3.2
-  flutter_app_version_checker: ^0.3.2
-  dropdown_search: ^3.0.1
-  get_storage: ^2.0.3
-  contacts_service: ^0.6.3
-  permission_handler: ^10.4.3
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.3.1
+  connectivity_plus: ^7.0.0
+  extended_image: ^10.0.1
+  http: ^1.6.0
+  image_picker: ^1.2.0
+  path_provider: ^2.1.5
+  intl: ^0.20.2
+  shimmer: ^3.0.0
+  flutter_svg: ^2.2.2
+  url_launcher: ^6.3.2
+  logger: ^2.6.1
+  lottie: ^3.3.1
+  dropdown_search: ^6.0.2
+  get: ^4.7.2
+  get_storage: ^2.1.1
+  contacts_service:
+    git: https://github.com/Flutter-Tent/flutter_contacts.git
+  permission_handler: ^12.0.1
   pin_code_fields: ^8.0.1
+  package_info_plus: ^8.3.1
 
-  # SMS:
-  flutter_sms:
-    git:
-      url: https://github.com/Flutter-Tent/flutter_sms.git
-
-  # State management:
-  get: ^4.6.5
+#  # SMS:
+#  flutter_sms:
+#    git: https://github.com/Flutter-Tent/flutter_sms.git
 
   # Firebase:
   firebase_core: any
   cloud_firestore: any
-  firebase_auth: ^4.10.0
+  firebase_auth: ^5.7.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

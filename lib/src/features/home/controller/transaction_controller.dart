@@ -7,7 +7,7 @@ import 'package:club_cash/src/core/utils/color.dart';
 import 'package:club_cash/src/features/home/model/transaction_model.dart';
 import 'package:club_cash/src/features/member/controller/member_controller.dart';
 import 'package:club_cash/src/features/settings/controller/settings_controller.dart';
-import 'package:flutter_sms/flutter_sms.dart';
+// import 'package:flutter_sms/flutter_sms.dart';
 import 'package:get/get.dart';
 
 class TransactionController extends GetxController {
@@ -64,11 +64,11 @@ class TransactionController extends GetxController {
     /// To send sms.
     try {
       if (await PermissionManager.requestSmsPermission()) {
-        await sendSMS(
-          message: message,
-          recipients: phoneNumbers,
-          sendDirect: true,
-        );
+        // await sendSMS(
+        //   message: message,
+        //   recipients: phoneNumbers,
+        //   sendDirect: true,
+        // );
 
         Log.debug("Send Confirmation SMS Successfully!");
       }

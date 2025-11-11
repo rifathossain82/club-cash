@@ -24,9 +24,9 @@ class CashOutTransactionAddUpdatePage extends StatefulWidget {
   final CashOutTransactionAddUpdatePageArguments arguments;
 
   const CashOutTransactionAddUpdatePage({
-    Key? key,
+    super.key,
     required this.arguments,
-  }) : super(key: key);
+  });
 
   @override
   State<CashOutTransactionAddUpdatePage> createState() =>
@@ -170,7 +170,6 @@ class _TransactionAddUpdatePageState
                 },
                 itemAsString: (item) => item ?? '',
                 showSearchBox: false,
-                isBottomSheetMode: true,
               ),
               KTextFormFieldBuilderWithTitle(
                 controller: remarkTextController,

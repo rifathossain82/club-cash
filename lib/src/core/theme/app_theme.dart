@@ -32,22 +32,14 @@ class AppTheme {
     ),
     textTheme: GoogleFonts.poppinsTextTheme(Typography.blackCupertino),
     checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStatePropertyAll(kPrimaryColor),
-      checkColor: MaterialStatePropertyAll(kWhite),
+      fillColor: WidgetStatePropertyAll(kPrimaryColor),
+      checkColor: WidgetStatePropertyAll(kWhite),
       side: BorderSide(color: kGrey),
-    ),
-    cardTheme: CardTheme(
-      color: kWhite,
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
-      ),
     ),
     iconTheme: IconThemeData(
       color: kGrey,
     ),
   );
-
 
   static void setDarkStatusBar() {
     SystemChrome.setSystemUIOverlayStyle(
@@ -69,7 +61,7 @@ class AppTheme {
     );
   }
 
-  static void enableInitialThemeSetting(){
+  static void enableInitialThemeSetting() {
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
       overlays: SystemUiOverlay.values,
@@ -77,7 +69,21 @@ class AppTheme {
   }
 
   /// to hide top and bottom, both status bar
-  static void hideStatusBar(){
+  static void hideStatusBar() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+  }
+
+  /// Enable Android 15 compatible edge-to-edge mode
+  static void enableEdgeToEdge() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+    /// Transparent overlays → Let Flutter draw under them
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarDividerColor: Colors.transparent,
+      ),
+    );
   }
 }

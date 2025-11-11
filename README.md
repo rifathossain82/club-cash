@@ -1,7 +1,7 @@
-# Club Cash - Flutter Project
+# FinTrack - Flutter Project
 
 ## Overview
-Club Cash is a Flutter-based mobile application designed to manage club cash transactions. The backend of the application is powered by Firebase. Users can add members directly from their phone contacts, and after every transaction, each user receives a confirmation message displaying the transaction amount and the current net balance.
+FinTrack is a Flutter-based mobile application designed to manage club cash transactions. The backend of the application is powered by Firebase. Users can add members directly from their phone contacts, and after every transaction, each user receives a confirmation message displaying the transaction amount and the current net balance.
 
 <br>
 

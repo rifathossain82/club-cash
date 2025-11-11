@@ -16,11 +16,8 @@ Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
   await FirebaseService.init();
 
-  /// Set preferred orientations to portrait only
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  /// Enable Android 15 compatible edge-to-edge mode
+  AppTheme.enableEdgeToEdge();
 
   /// Initialize local storage.
   await GetStorage.init(AppConstants.packageName);
@@ -29,7 +26,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
